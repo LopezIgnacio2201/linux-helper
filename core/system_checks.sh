@@ -10,8 +10,7 @@ check_arch_system() {
 }
 
 # Check if running on EndeavourOS
-check_endeavouros
-() {
+check_endeavouros() {
     if [[ -f /etc/endeavouros-release ]]; then
         log_info "Detected EndeavourOS - optimal compatibility"
         return 0
@@ -120,22 +119,11 @@ check_system_requirements() {
     log_info "Performing system requirements check..."
     
     check_arch_system
-    log_info "Arch system check completed"
-    
     check_endeavouros || true  # Don't fail if not on EOS, just warn
-    log_info "EndeavourOS check completed"
-    
     check_internet_connection
-    log_info "Internet connection check completed"
-    
     check_disk_space
-    log_info "Disk space check completed"
-    
     check_user_permissions
-    log_info "User permissions check completed"
-    
     check_required_tools
-    log_info "Required tools check completed"
     
     log_success "All system requirements met!"
 }
