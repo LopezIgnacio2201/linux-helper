@@ -99,7 +99,7 @@ check_system_requirements() {
     log_info "Performing system requirements check..."
     
     check_arch_system
-    check_endeavouros
+    check_endeavouros || true  # Don't fail if not on EOS, just warn
     check_internet_connection
     check_disk_space
     check_user_permissions
