@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-REPO_URL="https://raw.githubusercontent.com/yourusername/linux-helper/main"
+REPO_URL="https://raw.githubusercontent.com/LopezIgnacio2201/linux-helper/main"
 TEMP_DIR="/tmp/linux-helper-$$"
 
 # Show banner

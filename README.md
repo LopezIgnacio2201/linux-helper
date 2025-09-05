@@ -19,12 +19,12 @@ A modular, customizable, and powerful setup script for Arch-based distributions.
 
 ### Option 1: Curl Installer (Recommended)
 ```bash
-bash <(curl -sSL https://raw.githubusercontent.com/yourusername/linux-helper/main/install.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/LopezIgnacio2201/linux-helper/main/install.sh)
 ```
 
 ### Option 2: Manual Installation
 ```bash
-git clone https://github.com/yourusername/linux-helper.git
+git clone https://github.com/LopezIgnacio2201/linux-helper.git
 cd linux-helper
 chmod +x linux-helper.sh
 ./linux-helper.sh
