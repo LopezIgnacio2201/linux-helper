@@ -1,0 +1,9 @@
+So far there isnt anything customized, so this is just a template.
+
+If customized, just copy the 2 files here into the directory of the home user .config/zellij
+
+Note, this file will either be automatically generated ON first running zellij, or we can create this manually with:
+
+mkdir ~/.config/zellij
+zellij setup --dump-config > ~/.config/zellij/config.kdl // I dont really know about this since I would be copying the files from my personalized folder, so maybe this command is unnecesary
+

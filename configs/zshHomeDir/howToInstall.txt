@@ -1,0 +1,1 @@
+Put this file into the home directory (NOT on the .config path, but the user home directory) 

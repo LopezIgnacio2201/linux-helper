@@ -1,0 +1,3 @@
+Add both files in the directory of the home user .config/fastfetch 
+
+By default, there wont be this directory, we can either execute fastfetch --gen-config after installing fastfetch or creating this manually

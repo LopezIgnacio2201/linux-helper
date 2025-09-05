@@ -1,0 +1,1 @@
+Add these 3 files in the directory of the home user .config/zshrc.d

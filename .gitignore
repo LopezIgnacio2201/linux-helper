@@ -1,0 +1,38 @@
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup
+
+# VirtualBox files
+*.vbox
+*.vdi
+*.vmdk
+
+# ISO files
+*.iso
+
+# Temporary context (we'll clean this up later)
+TEMP-CONTEXT/
