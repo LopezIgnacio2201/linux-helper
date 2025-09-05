@@ -35,15 +35,27 @@ check_internet_connection() {
 check_disk_space() {
     log_info "Checking available disk space..."
     
-    local available_space
-    available_space=$(df / | awk 'NR==2 {print $4}')
     local required_space=2000000  # 2GB in KB
+    local max_available=0
+    local check_paths=("/" "/home" "/tmp" "/var")
     
-    if [[ $available_space -lt $required_space ]]; then
-        error_exit "Insufficient disk space! At least 2GB free space required."
+    # Check multiple paths and find the one with most available space
+    for path in "${check_paths[@]}"; do
+        if [[ -d "$path" ]]; then
+            local available_space
+            available_space=$(df "$path" | awk 'NR==2 {print $4}')
+            if [[ $available_space -gt $max_available ]]; then
+                max_available=$available_space
+            fi
+            log_info "Available space on $path: $((available_space / 1024))MB"
+        fi
+    done
+    
+    if [[ $max_available -lt $required_space ]]; then
+        error_exit "Insufficient disk space! At least 2GB free space required. Largest available: $((max_available / 1024))MB"
     fi
     
-    log_success "Disk space check passed"
+    log_success "Disk space check passed (largest available: $((max_available / 1024))MB)"
 }
 
 # Check user permissions
