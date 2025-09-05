@@ -11,6 +11,7 @@ select_language() {
         "Español" "Spanish"
     )
     
+    log_info "About to show language selection dialog..."
     LANGUAGE=$(dialog --clear \
         --backtitle "Linux Helper - Language Selection" \
         --title "Select Language / Seleccionar Idioma" \
@@ -18,7 +19,10 @@ select_language() {
         "${language_options[@]}" \
         2>&1 >/dev/tty)
     
-    if [[ $? -ne 0 ]]; then
+    local dialog_exit_code=$?
+    log_info "Dialog exit code: $dialog_exit_code"
+    
+    if [[ $dialog_exit_code -ne 0 ]]; then
         error_exit "Language selection cancelled"
     fi
     

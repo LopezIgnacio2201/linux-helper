@@ -8,9 +8,13 @@ get_module_title() {
     local module_file="${MODULES_DIR}/${module_name}.sh"
     
     if [[ -f "$module_file" ]]; then
-        # Source the module to get its title
-        source "$module_file"
-        echo "${MODULE_TITLE:-$module_name}"
+        # Extract MODULE_TITLE from the file without sourcing
+        local module_title=$(grep "^MODULE_TITLE=" "$module_file" | head -1 | cut -d'"' -f2)
+        if [[ -n "$module_title" ]]; then
+            echo "$module_title"
+        else
+            echo "$module_name"
+        fi
     else
         echo "$module_name"
     fi

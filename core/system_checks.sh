@@ -10,7 +10,8 @@ check_arch_system() {
 }
 
 # Check if running on EndeavourOS
-check_endeavouros() {
+check_endeavouros
+() {
     if [[ -f /etc/endeavouros-release ]]; then
         log_info "Detected EndeavourOS - optimal compatibility"
         return 0
@@ -87,11 +88,17 @@ check_required_tools() {
     # Check for dialog (required for interactive menus)
     if ! command -v dialog >/dev/null 2>&1; then
         missing_tools+=("dialog")
+        log_info "dialog not found"
+    else
+        log_info "dialog found"
     fi
     
     # Check for curl (required for downloading)
     if ! command -v curl >/dev/null 2>&1; then
         missing_tools+=("curl")
+        log_info "curl not found"
+    else
+        log_info "curl found"
     fi
     
     if [[ ${#missing_tools[@]} -gt 0 ]]; then
@@ -101,6 +108,8 @@ check_required_tools() {
         for tool in "${missing_tools[@]}"; do
             install_package "$tool"
         done
+    else
+        log_info "All required tools are available"
     fi
     
     log_success "Required tools check passed"
@@ -111,11 +120,22 @@ check_system_requirements() {
     log_info "Performing system requirements check..."
     
     check_arch_system
+    log_info "Arch system check completed"
+    
     check_endeavouros || true  # Don't fail if not on EOS, just warn
+    log_info "EndeavourOS check completed"
+    
     check_internet_connection
+    log_info "Internet connection check completed"
+    
     check_disk_space
+    log_info "Disk space check completed"
+    
     check_user_permissions
+    log_info "User permissions check completed"
+    
     check_required_tools
+    log_info "Required tools check completed"
     
     log_success "All system requirements met!"
 }

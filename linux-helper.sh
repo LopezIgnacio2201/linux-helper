@@ -54,6 +54,8 @@ main() {
     log_info "Performing system checks..."
     check_system_requirements
     
+    log_info "System checks completed, proceeding to language selection..."
+    
     # Language selection
     select_language
     
