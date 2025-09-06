@@ -32,17 +32,25 @@ select_poweruser_modules() {
     
     # Get available modules
     local available_modules=()
+    log_info "Scanning modules directory: ${MODULES_DIR}"
+    
     for module_file in "${MODULES_DIR}"/*.sh; do
         if [[ -f "$module_file" ]]; then
             local module_name=$(basename "$module_file" .sh)
+            log_info "Found module: $module_name"
             local module_title=$(get_module_title "$module_name")
+            log_info "Module title: $module_title"
             available_modules+=("$module_name" "$module_title")
         fi
     done
     
+    log_info "Total modules found: ${#available_modules[@]}"
+    
     if [[ ${#available_modules[@]} -eq 0 ]]; then
         error_exit "No modules found in ${MODULES_DIR}"
     fi
+    
+    log_info "About to show module selection dialog..."
     
     # Create checklist dialog
     SELECTED_MODULES=($(dialog --clear \
@@ -52,7 +60,10 @@ select_poweruser_modules() {
         "${available_modules[@]}" \
         2>&1 >/dev/tty))
     
-    if [[ $? -ne 0 ]]; then
+    local dialog_exit_code=$?
+    log_info "Dialog exit code: $dialog_exit_code"
+    
+    if [[ $dialog_exit_code -ne 0 ]]; then
         error_exit "Module selection cancelled"
     fi
     

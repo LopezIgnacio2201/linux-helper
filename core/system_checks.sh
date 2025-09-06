@@ -105,7 +105,8 @@ check_required_tools() {
         log_info "Installing missing tools..."
         
         for tool in "${missing_tools[@]}"; do
-            install_package "$tool"
+            log_info "Installing $tool..."
+            sudo pacman -S --needed --noconfirm "$tool"
         done
     else
         log_info "All required tools are available"

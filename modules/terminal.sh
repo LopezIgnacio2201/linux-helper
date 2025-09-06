@@ -109,6 +109,12 @@ configure_zsh() {
         log_success "Zsh configuration files copied"
     fi
     
+    # Backup existing .zshrc if it exists
+    if [[ -f "$HOME/.zshrc" ]]; then
+        cp "$HOME/.zshrc" "$HOME/.zshrc.backup.$(date +%Y%m%d_%H%M%S)"
+        log_info "Backed up existing .zshrc"
+    fi
+    
     # Create main .zshrc
     cat > "$HOME/.zshrc" << 'EOF'
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.

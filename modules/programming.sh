@@ -183,7 +183,7 @@ install_dev_tools() {
         "github-cli"
         "docker"
         "docker-compose"
-        "build-essential"
+        "base-devel"
         "cmake"
         "ninja"
         "meson"
