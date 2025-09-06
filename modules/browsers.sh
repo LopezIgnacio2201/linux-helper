@@ -11,13 +11,13 @@ install_browsers_packages() {
     
     # Show browser selection menu
     local browser_options=(
-        "librewolf" "LibreWolf - Privacy-focused Firefox fork"
-        "firefox" "Firefox - Mozilla's web browser"
-        "chromium" "Chromium - Open source Chrome"
-        "brave" "Brave - Privacy-focused browser"
-        "google-chrome" "Google Chrome - Popular web browser"
-        "vivaldi" "Vivaldi - Feature-rich browser"
-        "tor-browser" "Tor Browser - Anonymous browsing"
+        "librewolf" "LibreWolf - Privacy-focused Firefox fork" "0"
+        "firefox" "Firefox - Mozilla's web browser" "0"
+        "chromium" "Chromium - Open source Chrome" "0"
+        "brave" "Brave - Privacy-focused browser" "0"
+        "google-chrome" "Google Chrome - Popular web browser" "0"
+        "vivaldi" "Vivaldi - Feature-rich browser" "0"
+        "tor-browser" "Tor Browser - Anonymous browsing" "0"
     )
     
     local selected_browsers=($(dialog --clear \

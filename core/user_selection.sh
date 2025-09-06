@@ -40,7 +40,7 @@ select_poweruser_modules() {
             log_info "Found module: $module_name"
             local module_title=$(get_module_title "$module_name")
             log_info "Module title: $module_title"
-            available_modules+=("$module_name" "$module_title")
+            available_modules+=("$module_name" "$module_title" "0")
         fi
     done
     
@@ -53,6 +53,7 @@ select_poweruser_modules() {
     log_info "About to show module selection dialog..."
     
     # Create checklist dialog
+    log_info "Dialog arguments: ${available_modules[*]}"
     SELECTED_MODULES=($(dialog --clear \
         --backtitle "Linux Helper - Module Selection" \
         --title "$(get_text "select_modules")" \
@@ -128,12 +129,12 @@ select_newbie_modules() {
     
     # Use case selection for newbies
     local usecase_options=(
-        "gaming" "Gaming - Play games on Linux"
-        "programming" "Programming - Learn to code"
-        "office" "Office Work - Productivity and documents"
-        "multimedia" "Multimedia - Video, music, and photos"
-        "web_browsing" "Web Browsing - Internet and social media"
-        "dont_know" "I don't know - Install everything"
+        "gaming" "Gaming - Play games on Linux" "0"
+        "programming" "Programming - Learn to code" "0"
+        "office" "Office Work - Productivity and documents" "0"
+        "multimedia" "Multimedia - Video, music, and photos" "0"
+        "web_browsing" "Web Browsing - Internet and social media" "0"
+        "dont_know" "I don't know - Install everything" "0"
     )
     
     local selected_usecases=($(dialog --clear \

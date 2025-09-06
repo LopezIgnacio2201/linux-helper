@@ -45,9 +45,9 @@ install_proton_versions() {
     log_info "Installing Proton versions..."
     
     local proton_options=(
-        "proton-ge-custom" "Proton-GE - Community enhanced Proton"
-        "proton-tkg" "Proton-TKG - Custom Proton builds"
-        "protonup-qt" "ProtonUp-Qt - Proton version manager"
+        "proton-ge-custom" "Proton-GE - Community enhanced Proton" "0"
+        "proton-tkg" "Proton-TKG - Custom Proton builds" "0"
+        "protonup-qt" "ProtonUp-Qt - Proton version manager" "0"
     )
     
     local selected_protons=($(dialog --clear \
@@ -137,14 +137,14 @@ install_gaming_tools() {
         --backtitle "Linux Helper - Gaming Tools" \
         --title "Select Additional Gaming Tools" \
         --checklist "Choose additional tools:" 15 60 8 \
-        "discord" "Discord - Gaming communication" \
-        "obs-studio" "OBS Studio - Streaming/recording" \
-        "obs-studio-plugins" "OBS Studio Plugins" \
-        "gimp" "GIMP - Image editing" \
-        "krita" "Krita - Digital painting" \
-        "blender" "Blender - 3D modeling" \
-        "godot" "Godot - Game engine" \
-        "godot-tools" "Godot Tools" \
+        "discord" "Discord - Gaming communication" "0" \
+        "obs-studio" "OBS Studio - Streaming/recording" "0" \
+        "obs-studio-plugins" "OBS Studio Plugins" "0" \
+        "gimp" "GIMP - Image editing" "0" \
+        "krita" "Krita - Digital painting" "0" \
+        "blender" "Blender - 3D modeling" "0" \
+        "godot" "Godot - Game engine" "0" \
+        "godot-tools" "Godot Tools" "0" \
         2>&1 >/dev/tty))
     
     if [[ $? -ne 0 ]]; then

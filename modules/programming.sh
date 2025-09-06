@@ -11,11 +11,11 @@ install_programming_packages() {
     
     # Show programming tool selection
     local tool_options=(
-        "editors" "Code Editors (VS Code, Cursor, Vim, Neovim)"
-        "languages" "Programming Languages (Python, Node.js, Rust, Go)"
-        "tools" "Development Tools (Git, Docker, Build tools)"
-        "databases" "Database Tools (PostgreSQL, MySQL, Redis)"
-        "web" "Web Development (Nginx, Apache, Node.js tools)"
+        "editors" "Code Editors (VS Code, Cursor, Vim, Neovim)" "0"
+        "languages" "Programming Languages (Python, Node.js, Rust, Go)" "0"
+        "tools" "Development Tools (Git, Docker, Build tools)" "0"
+        "databases" "Database Tools (PostgreSQL, MySQL, Redis)" "0"
+        "web" "Web Development (Nginx, Apache, Node.js tools)" "0"
     )
     
     local selected_categories=($(dialog --clear \
@@ -59,13 +59,13 @@ install_editors() {
     log_info "Installing code editors..."
     
     local editor_options=(
-        "code" "Visual Studio Code"
-        "cursor" "Cursor AI Editor"
-        "neovim" "Neovim - Modern Vim"
-        "vim" "Vim - Classic editor"
-        "emacs" "Emacs - Extensible editor"
-        "sublime-text" "Sublime Text"
-        "atom" "Atom - GitHub's editor"
+        "code" "Visual Studio Code" "0"
+        "cursor" "Cursor AI Editor" "0"
+        "neovim" "Neovim - Modern Vim" "0"
+        "vim" "Vim - Classic editor" "0"
+        "emacs" "Emacs - Extensible editor" "0"
+        "sublime-text" "Sublime Text" "0"
+        "atom" "Atom - GitHub's editor" "0"
     )
     
     local selected_editors=($(dialog --clear \
@@ -112,14 +112,14 @@ install_languages() {
     log_info "Installing programming languages..."
     
     local language_options=(
-        "python" "Python - General purpose language"
-        "nodejs" "Node.js - JavaScript runtime"
-        "rust" "Rust - Systems programming"
-        "go" "Go - Google's language"
-        "java" "Java - Enterprise development"
-        "csharp" "C# - Microsoft's language"
-        "php" "PHP - Web development"
-        "ruby" "Ruby - Dynamic language"
+        "python" "Python - General purpose language" "0"
+        "nodejs" "Node.js - JavaScript runtime" "0"
+        "rust" "Rust - Systems programming" "0"
+        "go" "Go - Google's language" "0"
+        "java" "Java - Enterprise development" "0"
+        "csharp" "C# - Microsoft's language" "0"
+        "php" "PHP - Web development" "0"
+        "ruby" "Ruby - Dynamic language" "0"
     )
     
     local selected_languages=($(dialog --clear \
@@ -214,11 +214,11 @@ install_databases() {
     log_info "Installing database tools..."
     
     local db_options=(
-        "postgresql" "PostgreSQL - Advanced database"
-        "mysql" "MySQL - Popular database"
-        "redis" "Redis - In-memory database"
-        "mongodb" "MongoDB - Document database"
-        "sqlite" "SQLite - Embedded database"
+        "postgresql" "PostgreSQL - Advanced database" "0"
+        "mysql" "MySQL - Popular database" "0"
+        "redis" "Redis - In-memory database" "0"
+        "mongodb" "MongoDB - Document database" "0"
+        "sqlite" "SQLite - Embedded database" "0"
     )
     
     local selected_dbs=($(dialog --clear \
@@ -273,12 +273,12 @@ install_web_tools() {
         --backtitle "Linux Helper - Web Tools" \
         --title "Select Web Development Tools" \
         --checklist "Choose web tools:" 12 60 6 \
-        "nginx" "Nginx - Web server" \
-        "apache" "Apache - Web server" \
-        "httpd" "HTTPD - Apache HTTP server" \
-        "certbot" "Certbot - SSL certificates" \
-        "certbot-nginx" "Certbot Nginx plugin" \
-        "certbot-apache" "Certbot Apache plugin" \
+        "nginx" "Nginx - Web server" "0" \
+        "apache" "Apache - Web server" "0" \
+        "httpd" "HTTPD - Apache HTTP server" "0" \
+        "certbot" "Certbot - SSL certificates" "0" \
+        "certbot-nginx" "Certbot Nginx plugin" "0" \
+        "certbot-apache" "Certbot Apache plugin" "0" \
         2>&1 >/dev/tty))
     
     if [[ $? -ne 0 ]]; then
