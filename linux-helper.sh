@@ -28,6 +28,14 @@ LANGUAGE="en"
 USER_TYPE=""
 SELECTED_MODULES=()
 PACKAGE_MANAGER="paru"
+CREATE_ALIASES=false
+
+# Configuration flags
+SKIP_LANGUAGE_SELECTION=false
+SKIP_USER_TYPE_SELECTION=false
+SKIP_MODULE_SELECTION=false
+SKIP_PACKAGE_MANAGER_SELECTION=false
+SKIP_ALIASES_PROMPT=false
 LOG_FILE=""
 NO_SUDO_ASK=false
 
@@ -41,11 +49,19 @@ source "${CORE_DIR}/user_selection.sh"
 source "${CORE_DIR}/module_manager.sh"
 source "${CORE_DIR}/logging.sh"
 source "${CORE_DIR}/package_manager.sh"
+source "${CORE_DIR}/aliases.sh"
+source "${CORE_DIR}/config_manager.sh"
 
 # Main function
 main() {
+    # Parse command line arguments
+    parse_arguments "$@"
+    
     # Initialize logging
     init_logging
+    
+    # Load custom configuration if provided
+    load_custom_config
     
     # Display welcome banner
     show_banner
@@ -56,26 +72,44 @@ main() {
     
     log_info "System checks completed, proceeding to language selection..."
     
-    # Language selection
-    select_language
-    
-    # User type selection
-    select_user_type
-    
-    # Module selection based on user type
-    if [[ "${USER_TYPE}" == "poweruser" ]]; then
-        select_poweruser_modules
-    elif [[ "${USER_TYPE}" == "common" ]]; then
-        select_common_modules
-    elif [[ "${USER_TYPE}" == "newbie" ]]; then
-        select_newbie_modules
+    # Language selection (skip if using custom config)
+    if [[ "$SKIP_LANGUAGE_SELECTION" == "false" ]]; then
+        select_language
     fi
     
-    # Package manager selection
-    select_package_manager
+    # User type selection (skip if using custom config)
+    if [[ "$SKIP_USER_TYPE_SELECTION" == "false" ]]; then
+        select_user_type
+    fi
+    
+    # Module selection based on user type (skip if using custom config)
+    if [[ "$SKIP_MODULE_SELECTION" == "false" ]]; then
+        if [[ "${USER_TYPE}" == "poweruser" ]]; then
+            select_poweruser_modules
+        elif [[ "${USER_TYPE}" == "common" ]]; then
+            select_common_modules
+        elif [[ "${USER_TYPE}" == "newbie" ]]; then
+            select_newbie_modules
+        fi
+    fi
+    
+    # Package manager selection (skip if using custom config)
+    if [[ "$SKIP_PACKAGE_MANAGER_SELECTION" == "false" ]]; then
+        select_package_manager
+    fi
     
     # Install selected modules
     install_selected_modules
+    
+    # Create aliases (skip if using custom config)
+    if [[ "$SKIP_ALIASES_PROMPT" == "false" ]]; then
+        prompt_create_aliases
+    elif [[ "$CREATE_ALIASES" == "true" ]]; then
+        create_aliases
+    fi
+    
+    # Prompt to save configuration
+    prompt_save_config
     
     # Final message
     show_completion_message
@@ -121,8 +155,8 @@ show_completion_message() {
     fi
 }
 
-# Parse command line arguments
-parse_arguments() {
+# Parse command line arguments (legacy support)
+parse_arguments_legacy() {
     while [[ $# -gt 0 ]]; do
         case $1 in
             --no-sudo-ask)
@@ -134,9 +168,8 @@ parse_arguments() {
                 exit 0
                 ;;
             *)
-                echo -e "${RED}Unknown option: $1${NC}"
-                show_help
-                exit 1
+                # Let the new parse_arguments handle it
+                return 0
                 ;;
         esac
     done
@@ -151,12 +184,31 @@ USAGE:
     $0 [OPTIONS]
 
 OPTIONS:
-    --no-sudo-ask    Don't ask for sudo password on each command
-    --help, -h       Show this help message
+    --custom-config FILE    Use custom configuration file for automation
+    --no-sudo-ask          Don't ask for sudo password on each command
+    --help, -h             Show this help message
 
 EXAMPLES:
-    $0                    # Interactive setup
-    $0 --no-sudo-ask      # Setup without repeated sudo prompts
+    $0                                    # Interactive setup
+    $0 --no-sudo-ask                      # Setup without repeated sudo prompts
+    $0 --custom-config my-config.txt      # Use custom configuration file
+
+DESCRIPTION:
+    This script automates the setup of Arch-based Linux distributions
+    with modular package installation and configuration management.
+
+    Features:
+    - Interactive module selection
+    - Multiple user profiles (newbie, common, poweruser)
+    - Package manager selection (paru, yay)
+    - Command aliases creation
+    - Custom configuration support
+    - Comprehensive logging
+    - Modular architecture
+
+    Custom Configuration:
+    Create a config file using the template in configs/custom-config-template.txt
+    and use it to automate future installations.
 
 EOF
 }
@@ -173,7 +225,6 @@ trap 'error_exit "Script failed at line $LINENO"' ERR
 
 # Run main function if script is executed directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    parse_arguments "$@"
     main "$@"
 fi
 

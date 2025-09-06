@@ -1,0 +1,51 @@
+# Linux Helper - Custom Configuration Template
+# Copy this file and modify it according to your preferences
+# Then run: ./linux-helper.sh --custom-config your-config.txt
+
+# Basic Configuration
+USER_TYPE="poweruser"  # Options: newbie, common, poweruser
+LANGUAGE="en"          # Options: en, es
+PACKAGE_MANAGER="paru" # Options: paru, yay
+
+# Selected Modules (space-separated)
+SELECTED_MODULES=("browsers" "gaming" "programming" "terminal" "media" "office" "system" "social" "virtualization" "command_replacements" "file_managers" "windows_users")
+
+# Module-specific configurations
+# Browsers
+BROWSERS_SELECTED=("firefox" "librewolf-bin" "tor-browser")
+
+# Gaming
+GAMING_SELECTED=("steam" "lutris" "wine" "gamemode")
+
+# Programming
+PROGRAMMING_SELECTED=("visual-studio-code-bin" "neovim" "git" "nodejs" "python")
+
+# Terminal
+TERMINAL_SELECTED=("zsh" "starship" "zellij" "ghostty")
+
+# Media
+MEDIA_SELECTED=("vlc" "mpv" "obs-studio")
+
+# Office
+OFFICE_SELECTED=("libreoffice-fresh" "obsidian")
+
+# System
+SYSTEM_SELECTED=("paru" "htop" "btop" "curl" "wget")
+
+# Social
+SOCIAL_SELECTED=("discord" "telegram-desktop")
+
+# Virtualization
+VIRTUALIZATION_SELECTED=("qemu" "virt-manager")
+
+# Command Replacements
+COMMAND_REPLACEMENTS_SELECTED=("lsd" "bat" "fd" "ripgrep" "fzf" "duf" "gdu")
+
+# File Managers
+FILE_MANAGERS_SELECTED=("dolphin" "ranger")
+
+# Windows Users
+WINDOWS_USERS_SELECTED=("wine" "bottles" "krita" "gimp" "libreoffice-fresh")
+
+# Aliases
+CREATE_ALIASES=true
