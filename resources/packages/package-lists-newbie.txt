@@ -4,12 +4,7 @@
 # NEWBIE PROFILE: AUTOMATED INSTALLATION
 # =============================================================================
 
-## CORE PACKAGES (Always Installed)
-
-### Desktop Environment (Windows-like)
-kde-plasma
-kde-applications
-sddm
+## CORE PACKAGES (Always Installed - No Desktop Environment)
 
 ### Main Browsers
 firefox
@@ -90,7 +85,6 @@ darktable
 rawtherapee
 obs-studio
 kdenlive
-
 
 ## CYBERSECURITY USE CASE
 nmap

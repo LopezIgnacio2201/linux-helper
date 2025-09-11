@@ -9,6 +9,10 @@
 ### Core Modules (Always Available)
 - Browsers
 - Terminals
+  --> Terminal Emulators
+  --> Shells
+  --> Shell Enhancements
+  --> Terminal Multiplexers
 - File Managers
 - Media Players
 - Office and Productivity
@@ -18,12 +22,12 @@
 
 ### Development Modules (Limited)
 - Development Tools (Basic submodules only)
---> IDEs and Editors
---> programming Languages
---> Version Control
+  --> IDEs and Editors
+  --> Programming Languages
+  --> Version Control
 
 ### Utility Modules (Essential)
 - Utilities (Command Replacements only)
---> Command Replacements
---> Archive and Compression
+  --> Command Replacements
+  --> Archive and Compression
 

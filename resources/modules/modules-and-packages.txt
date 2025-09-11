@@ -18,7 +18,7 @@ tor-browser
 
 ## TERMINALS MODULE
 
-### Terminal Emulators
+### SUBMODULE: Terminal Emulators
 alacritty
 kitty
 foot
@@ -29,17 +29,17 @@ terminator
 xterm
 ghostty
 
-### Shells
+### SUBMODULE: Shells
 bash
 zsh
 fish
 
-### Shell Enhancements
+### SUBMODULE: Shell Enhancements
 oh-my-zsh
 bash-completion
 starship
 
-### Terminal Multiplexers
+### SUBMODULE: Terminal Multiplexers
 tmux
 zellij
 
@@ -217,13 +217,13 @@ eog
 
 ## DEVELOPMENT TOOLS MODULE
 
-### IDEs and Editors
+### SUBMODULE: IDEs and Editors
 code
 vscodium
 netbeans
 android-studio
 
-### Programming Languages
+### SUBMODULE: Programming Languages
 python
 nodejs
 jdk-openjdk
@@ -232,7 +232,7 @@ rust
 php
 ruby
 
-### Build Tools and Compilers
+### SUBMODULE: Build Tools and Compilers
 gcc
 clang
 make
@@ -246,11 +246,11 @@ npm
 yarn
 pip
 
-### Version Control
+### SUBMODULE: Version Control
 git
 github-cli
 
-### Databases
+### SUBMODULE: Databases
 mysql
 postgresql
 sqlite
@@ -258,7 +258,7 @@ mongodb
 redis
 dbeaver
 
-### Container and DevOps
+### SUBMODULE: Container and DevOps
 docker
 docker-compose
 kubernetes
