@@ -1,0 +1,29 @@
+# Common User Menu - Available Modules and Submodules
+
+# =============================================================================
+# COMMON USER PROFILE - TUI MENU STRUCTURE
+# =============================================================================
+
+## Available Modules for Common User Profile
+
+### Core Modules (Always Available)
+- Browsers
+- Terminals
+- File Managers
+- Media Players
+- Office and Productivity
+- Gaming
+- Communication
+- Graphics and Design
+
+### Development Modules (Limited)
+- Development Tools (Basic submodules only)
+--> IDEs and Editors
+--> programming Languages
+--> Version Control
+
+### Utility Modules (Essential)
+- Utilities (Command Replacements only)
+--> Command Replacements
+--> Archive and Compression
+

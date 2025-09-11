@@ -1,0 +1,525 @@
+# Modules and Packages - Complete List
+
+# =============================================================================
+# MODULE: BROWSERS
+# =============================================================================
+
+## BROWSERS MODULE
+
+### Main Browsers
+firefox
+chromium
+librewolf
+tor-browser
+
+# =============================================================================
+# MODULE: TERMINALS
+# =============================================================================
+
+## TERMINALS MODULE
+
+### Terminal Emulators
+alacritty
+kitty
+foot
+konsole
+gnome-terminal
+xfce4-terminal
+terminator
+xterm
+ghostty
+
+### Shells
+bash
+zsh
+fish
+
+### Shell Enhancements
+oh-my-zsh
+bash-completion
+starship
+
+### Terminal Multiplexers
+tmux
+zellij
+
+# =============================================================================
+# MODULE: FILE MANAGERS
+# =============================================================================
+
+## FILE MANAGERS MODULE
+
+### GUI File Managers
+nautilus
+dolphin
+thunar
+
+### CLI File Managers
+TO-DO we will check this module later on, not now
+
+# =============================================================================
+# MODULE: MEDIA PLAYERS
+# =============================================================================
+
+## MEDIA PLAYERS MODULE
+
+### Video Players
+vlc
+mpv
+kodi
+celluloid
+
+### Audio Players
+clementine
+
+# =============================================================================
+# MODULE: OFFICE AND PRODUCTIVITY
+# =============================================================================
+
+## OFFICE AND PRODUCTIVITY MODULE
+
+### Office Suites
+libreoffice-fresh
+libreoffice-still
+
+### Document Viewers
+evince
+okular
+xreader
+zathura
+mupdf
+
+### Note Taking
+obsidian
+marktext
+xournalpp
+
+### Text Editors
+gedit
+kate
+leafpad
+nano
+vim
+neovim
+
+# =============================================================================
+# MODULE: GAMING
+# =============================================================================
+
+## GAMING MODULE
+
+### Gaming Platforms
+steam
+lutris
+heroic-games-launcher
+
+### Wine and Compatibility
+wine
+wine-mono
+wine-gecko
+winetricks
+bottles
+
+### Gaming Utilities
+mangohud
+gamemode
+vkbasalt
+goverlay
+
+### Emulators
+retroarch
+dolphin-emu
+pcsx2
+rpcs3
+yuzu
+citra
+mednafen
+nestopia
+snes9x
+mame
+
+### External Gaming Projects (Non-Package Installs)
+proton-tkg
+linux-tkg
+arch-gaming-setup
+
+# =============================================================================
+# MODULE: COMMUNICATION
+# =============================================================================
+
+## COMMUNICATION MODULE
+
+### Messaging Apps
+discord
+telegram-desktop
+signal-desktop
+whatsapp-for-linux
+skype
+
+### Email Clients
+thunderbird
+geary
+alpine
+mutt
+neomutt
+
+### Video Conferencing
+zoom
+teams
+meet
+
+### IRC and Chat
+hexchat
+weechat
+irssi
+pidgin
+gajim
+
+# =============================================================================
+# MODULE: GRAPHICS AND DESIGN
+# =============================================================================
+
+## GRAPHICS AND DESIGN MODULE
+
+### Image Editors
+gimp
+krita
+inkscape
+darktable
+rawtherapee
+digikam
+shotwell
+feh
+
+### Vector Graphics
+libreoffice-draw
+scribus
+
+### 3D Modeling
+blender
+freecad
+openscad
+meshlab
+
+### Design Tools
+figma-linux
+canva
+adobe-creative-cloud
+
+### Image Viewers
+gwenview
+ristretto
+eog
+
+# =============================================================================
+# MODULE: DEVELOPMENT TOOLS
+# =============================================================================
+
+## DEVELOPMENT TOOLS MODULE
+
+### IDEs and Editors
+code
+vscodium
+netbeans
+android-studio
+
+### Programming Languages
+python
+nodejs
+jdk-openjdk
+go
+rust
+php
+ruby
+
+### Build Tools and Compilers
+gcc
+clang
+make
+cmake
+ninja
+meson
+maven
+gradle
+cargo
+npm
+yarn
+pip
+
+### Version Control
+git
+github-cli
+
+### Databases
+mysql
+postgresql
+sqlite
+mongodb
+redis
+dbeaver
+
+### Container and DevOps
+docker
+docker-compose
+kubernetes
+terraform
+ansible
+
+# =============================================================================
+# MODULE: UTILITIES
+# =============================================================================
+
+## UTILITIES MODULE
+
+### Command Replacements
+lsd
+exa
+bat
+fd
+ripgrep
+htop
+btop
+gdu
+duf
+procs
+tree
+fzf
+
+### System Utilities
+fastfetch
+nethogs
+rsync
+timeshift
+
+### Archive and Compression
+unzip
+p7zip
+tar
+gzip
+bzip2
+xz
+zstd
+
+# =============================================================================
+# MODULE: CYBERSECURITY
+# =============================================================================
+
+## CYBERSECURITY MODULE
+
+### Network Security and Reconnaissance
+nmap
+masscan
+zmap
+recon-ng
+theharvester
+sublist3r
+amass
+assetfinder
+subfinder
+httpx
+gobuster
+dirb
+dirbuster
+wfuzz
+ffuf
+
+### Vulnerability Assessment
+nessus
+openvas
+nikto
+sqlmap
+wpscan
+joomscan
+droopescan
+w3af
+skipfish
+wapiti
+whatweb
+wafw00f
+
+### Web Application Security
+burpsuite
+owasp-zap
+commix
+xsser
+xsstrike
+dalfox
+param-miner
+
+### Password Attacks
+john
+hashcat
+hydra
+medusa
+patator
+crunch
+cewl
+cupp
+rsmangler
+hash-identifier
+hashid
+
+### Wireless Security
+aircrack-ng
+reaver
+bully
+wifite
+kismet
+wireshark
+tshark
+tcpdump
+bettercap
+fluxion
+
+### Social Engineering
+setoolkit
+phishery
+gophish
+king-phisher
+beef-xss
+social-engineer-toolkit
+
+### Malware Analysis
+yara
+clamav
+cuckoo
+volatility
+radare2
+ghidra
+ida-free
+x64dbg
+ollydbg
+pe-bear
+peview
+strings
+file
+binwalk
+upx
+
+### Forensics
+autopsy
+sleuthkit
+bulk-extractor
+foremost
+scalpel
+photorec
+testdisk
+ddrescue
+dc3dd
+guymager
+rekall
+plaso
+log2timeline
+
+### Exploitation Frameworks
+metasploit
+armitage
+cobalt-strike
+empire
+powershell-empire
+unicorn
+veil
+thefatrat
+msfvenom
+payloadsallthethings
+
+### Network Monitoring and Analysis
+netstat
+ss
+iftop
+tcpflow
+ngrep
+dnsrecon
+dnsenum
+fierce
+dnsmap
+dnswalk
+
+### Cryptography and Steganography
+steghide
+outguess
+stegsolve
+stegcracker
+gpg
+openssl
+cryptcat
+ncat
+socat
+netcat
+nc
+
+### OSINT and Information Gathering
+maltego
+spiderfoot
+shodan
+censys
+zoomeye
+binaryedge
+passivetotal
+threatcrowd
+virustotal
+urlvoid
+ipvoid
+
+# =============================================================================
+# MODULE: PRIVACY
+# =============================================================================
+
+## PRIVACY MODULE
+
+### VPN and Proxy Tools
+mullvad-vpn
+protonvpn
+ivpn
+tor
+proxychains
+
+### DNS and Network Privacy
+nextdns
+adguard-dns
+cloudflare-dns
+dnscrypt-proxy
+unbound
+
+### Email Privacy
+protonmail
+tutanota
+enigmail
+mailvelope
+
+### Messaging Privacy
+session
+threema
+element-desktop
+jitsi-meet
+
+### File Encryption and Storage
+veracrypt
+cryptomator
+age
+
+### Password Management
+bitwarden
+keepassxc
+pass
+1password
+lastpass
+
+### Metadata Protection
+mat2
+exiftool
+pdf-redact-tools
+metadata-cleaner
+
+### Privacy Utilities
+ublock-origin
+privacy-badger
+https-everywhere
+decentraleyes
+clearurls
+
+### System Privacy
+firejail
+bubblewrap
+apparmor
+selinux

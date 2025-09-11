@@ -1,0 +1,250 @@
+# TUI Tree Structure Visualization
+
+# =============================================================================
+# COMMON USER PROFILE - TUI TREE STRUCTURE
+# =============================================================================
+
+## Common User Main Menu
+
+```
+Main Menu
+├── Browsers (ENTER → submenu)
+├── Terminals (ENTER → submenu)
+├── File Managers (ENTER → submenu)
+├── Media Players (ENTER → submenu)
+├── Office and Productivity (ENTER → submenu)
+├── Gaming (ENTER → submenu)
+├── Communication (ENTER → submenu)
+├── Graphics and Design (ENTER → submenu)
+├── Development Tools (ENTER → submenu)
+├── Utilities (ENTER → submenu)
+└── [Back] [Confirm Selection]
+```
+
+## Common User Submenus
+
+### Browsers Submenu
+```
+Browsers
+├── firefox [SELECTED]
+├── chromium
+└── librewolf
+```
+
+### Terminals Submenu
+```
+Terminals
+├── Terminal Emulators (ENTER → submenu)
+├── Shells (ENTER → submenu)
+├── Shell Enhancements (ENTER → submenu)
+└── Terminal Multiplexers (ENTER → submenu)
+```
+
+### Terminal Emulators Submenu
+```
+Terminal Emulators
+├── alacritty [SELECTED]
+├── kitty
+├── gnome-terminal
+└── ghostty
+```
+
+### Shells Submenu
+```
+Shells
+├── bash
+├── zsh [SELECTED]
+└── fish
+```
+
+### Development Tools Submenu
+```
+Development Tools
+├── IDEs and Editors (ENTER → submenu)
+├── Programming Languages (ENTER → submenu)
+└── Version Control (ENTER → submenu)
+```
+
+### IDEs and Editors Submenu
+```
+IDEs and Editors
+├── code [SELECTED]
+└── vscodium
+```
+
+### Programming Languages Submenu
+```
+Programming Languages
+├── python [SELECTED]
+└── nodejs
+```
+
+### Utilities Submenu
+```
+Utilities
+├── Command Replacements (ENTER → submenu)
+└── Archive and Compression (ENTER → submenu)
+```
+
+### Command Replacements Submenu
+```
+Command Replacements
+├── lsd [SELECTED]
+├── bat
+├── htop
+├── btop
+└── fzf
+```
+
+# =============================================================================
+# POWER USER PROFILE - TUI TREE STRUCTURE
+# =============================================================================
+
+## Power User Main Menu
+
+```
+Main Menu
+├── Browsers (ENTER → submenu)
+├── Terminals (ENTER → submenu)
+├── File Managers (ENTER → submenu)
+├── Media Players (ENTER → submenu)
+├── Office and Productivity (ENTER → submenu)
+├── Gaming (ENTER → submenu)
+├── Communication (ENTER → submenu)
+├── Graphics and Design (ENTER → submenu)
+├── Development Tools (ENTER → submenu)
+├── Utilities (ENTER → submenu)
+├── Cybersecurity (ENTER → submenu)
+├── Privacy (ENTER → submenu)
+└── [Back] [Confirm Selection]
+```
+
+## Power User Submenus
+
+### Cybersecurity Submenu
+```
+Cybersecurity
+├── Network Security and Reconnaissance (ENTER → submenu)
+├── Vulnerability Assessment (ENTER → submenu)
+├── Web Application Security (ENTER → submenu)
+├── Password Attacks (ENTER → submenu)
+├── Wireless Security (ENTER → submenu)
+├── Malware Analysis (ENTER → submenu)
+├── Forensics (ENTER → submenu)
+├── Exploitation Frameworks (ENTER → submenu)
+├── Network Monitoring and Analysis (ENTER → submenu)
+└── Cryptography and Steganography (ENTER → submenu)
+```
+
+### Network Security and Reconnaissance Submenu
+```
+Network Security and Reconnaissance
+├── nmap [SELECTED]
+├── masscan
+├── recon-ng
+├── theharvester
+├── gobuster
+├── dirb
+└── ffuf
+```
+
+### Privacy Submenu
+```
+Privacy
+├── VPN and Proxy Tools (ENTER → submenu)
+├── Network Monitoring and Analysis (ENTER → submenu)
+├── Wireless Security (ENTER → submenu)
+└── Network Security and Reconnaissance (ENTER → submenu)
+```
+
+### VPN and Proxy Tools Submenu
+```
+VPN and Proxy Tools
+├── mullvad-vpn [SELECTED]
+├── protonvpn
+├── tor
+└── proxychains
+```
+
+# =============================================================================
+# EXPANDED PROFILE (--expanded parameter) - TUI TREE STRUCTURE
+# =============================================================================
+
+## Expanded Main Menu (Same as Power User)
+
+```
+Main Menu
+├── Browsers (ENTER → submenu)
+├── Terminals (ENTER → submenu)
+├── File Managers (ENTER → submenu)
+├── Media Players (ENTER → submenu)
+├── Office and Productivity (ENTER → submenu)
+├── Gaming (ENTER → submenu)
+├── Communication (ENTER → submenu)
+├── Graphics and Design (ENTER → submenu)
+├── Development Tools (ENTER → submenu)
+├── Utilities (ENTER → submenu)
+├── Cybersecurity (ENTER → submenu)
+├── Privacy (ENTER → submenu)
+└── [Back] [Confirm Selection]
+```
+
+## Expanded Cybersecurity Submenu (Full)
+
+```
+Cybersecurity
+├── Network Security and Reconnaissance (ENTER → submenu)
+├── Vulnerability Assessment (ENTER → submenu)
+├── Web Application Security (ENTER → submenu)
+├── Password Attacks (ENTER → submenu)
+├── Wireless Security (ENTER → submenu)
+├── Social Engineering (ENTER → submenu)
+├── Malware Analysis (ENTER → submenu)
+├── Forensics (ENTER → submenu)
+├── Exploitation Frameworks (ENTER → submenu)
+├── Network Monitoring and Analysis (ENTER → submenu)
+├── Cryptography and Steganography (ENTER → submenu)
+└── OSINT and Information Gathering (ENTER → submenu)
+```
+
+## Expanded Network Security and Reconnaissance Submenu (Full)
+
+```
+Network Security and Reconnaissance
+├── nmap [SELECTED]
+├── masscan
+├── zmap
+├── recon-ng
+├── theharvester
+├── sublist3r
+├── amass
+├── assetfinder
+├── subfinder
+├── httpx
+├── gobuster
+├── dirb
+├── dirbuster
+├── wfuzz
+└── ffuf
+```
+
+# =============================================================================
+# NAVIGATION CONTROLS
+# =============================================================================
+
+## Navigation Legend
+- **Arrow Keys (Up/Down)**: Navigate through menu items
+- **Arrow Keys (Left/Right)**: Enter/exit submenus
+- **TAB**: Select/deselect packages (toggle selection)
+- **ENTER**: Enter submenu or confirm final selection
+- **Back Option**: Always available at bottom to go back
+
+## Visual Indicators
+- **[SELECTED]**: Package selected with checkmark
+- **(ENTER → submenu)**: Indicates submenu can be entered
+- **Selection Persistence**: Selected packages remain selected when navigating
+
+## Profile Differences
+- **Common User**: 10 modules, limited submodules, no advanced tools
+- **Power User**: 12 modules, full submodules, limited advanced tools
+- **Expanded (--expanded)**: 12 modules, ALL submodules, complete toolset

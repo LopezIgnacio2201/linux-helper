@@ -1,0 +1,102 @@
+# Newbie Profile - Automated Package Lists
+
+# =============================================================================
+# NEWBIE PROFILE: AUTOMATED INSTALLATION
+# =============================================================================
+
+## CORE PACKAGES (Always Installed)
+
+### Desktop Environment (Windows-like)
+kde-plasma
+kde-applications
+sddm
+
+### Main Browsers
+firefox
+chromium
+
+### File Manager
+dolphin
+
+### Media Players
+vlc
+clementine
+
+### Office Suite
+libreoffice-fresh
+
+### Document Viewers
+okular
+
+### Note Taking
+obsidian
+
+### Text Editors
+kate
+nano
+
+### Communication
+discord
+telegram-desktop
+
+### Video Conferencing
+zoom
+
+### Graphics (Basic)
+gimp
+gwenview
+
+### Development (Minimal)
+code
+
+### Programming Languages (Basic)
+python
+
+### Build Tools (Minimal)
+git
+
+### Archive Tools
+unzip
+p7zip
+
+# =============================================================================
+# USE CASE SPECIFIC PACKAGES
+# =============================================================================
+
+## GAMING USE CASE
+steam
+lutris
+mangohud
+gamemode
+
+## DAY TO DAY USE CASE
+shotwell
+digikam
+
+## PROGRAMMING USE CASE
+nodejs
+gcc
+make
+cmake
+docker
+mysql
+postgresql
+
+## EDITING USE CASE
+krita
+inkscape
+blender
+darktable
+rawtherapee
+obs-studio
+kdenlive
+
+
+## CYBERSECURITY USE CASE
+nmap
+wireshark
+john
+hashcat
+metasploit
+burpsuite
+sqlmap
