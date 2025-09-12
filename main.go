@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"linux-package-manager/internal/data"
 )
 
@@ -23,6 +24,47 @@ func max(a, b int) int {
 	}
 	return b
 }
+
+// Styling
+var (
+	// Colors
+	primaryColor   = lipgloss.Color("#00D4AA") // Teal
+	secondaryColor = lipgloss.Color("#7C3AED") // Purple
+	accentColor    = lipgloss.Color("#F59E0B") // Amber
+	textColor      = lipgloss.Color("#F8FAFC") // Light gray
+	mutedColor     = lipgloss.Color("#64748B") // Gray
+	
+	// Styles
+	titleStyle = lipgloss.NewStyle().
+			Foreground(primaryColor).
+			Bold(true).
+			Margin(1, 0)
+	
+	headerStyle = lipgloss.NewStyle().
+			Foreground(secondaryColor).
+			Bold(true).
+			Margin(0, 0, 1, 0)
+	
+	selectedStyle = lipgloss.NewStyle().
+			Foreground(accentColor).
+			Bold(true).
+			Background(lipgloss.Color("#1E293B")).
+			Padding(0, 1)
+	
+	unselectedStyle = lipgloss.NewStyle().
+			Foreground(textColor).
+			Padding(0, 1)
+	
+	controlsStyle = lipgloss.NewStyle().
+			Foreground(mutedColor).
+			Margin(1, 0)
+	
+	boxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(primaryColor).
+			Padding(1, 2).
+			Margin(1, 0)
+)
 
 type model struct {
 	message    string
@@ -114,63 +156,77 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	var content strings.Builder
 	
-	content.WriteString(fmt.Sprintf("%s\n\n", m.message))
+	// Title
+	content.WriteString(titleStyle.Render("🚀 Linux Package Manager TUI"))
+	content.WriteString("\n\n")
 	
 	if m.currentView == "profile_selection" {
 		// Show profiles for selection
 		if len(m.profiles) > 0 {
-			content.WriteString("Select a profile:\n")
+			content.WriteString(headerStyle.Render("Select a profile:"))
+			content.WriteString("\n")
+			
 			for i, profile := range m.profiles {
 				if i == m.selectedProfile {
-					content.WriteString(fmt.Sprintf("> %s <\n", profile))
+					content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", profile)))
 				} else {
-					content.WriteString(fmt.Sprintf("  %s\n", profile))
+					content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", profile)))
 				}
+				content.WriteString("\n")
 			}
 			content.WriteString("\n")
 		}
 	} else if m.currentView == "module_selection" {
 		// Show modules for selected profile
 		selectedProfileName := m.profiles[m.selectedProfile]
-		content.WriteString(fmt.Sprintf("Profile: %s\n\n", selectedProfileName))
+		content.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
+		content.WriteString("\n")
 		
 		// Get available modules for this profile
 		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
 		if exists {
 			if selectedProfileName == "newbie" {
 				// Newbie profile shows use cases instead of modules
-				content.WriteString("Select a use case:\n")
+				content.WriteString(headerStyle.Render("Select a use case:"))
+				content.WriteString("\n")
 				useCaseIndex := 0
 				for useCase := range profile.UseCases {
 					if useCaseIndex == m.selectedModule {
-						content.WriteString(fmt.Sprintf("> %s <\n", useCase))
+						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", useCase)))
 					} else {
-						content.WriteString(fmt.Sprintf("  %s\n", useCase))
+						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", useCase)))
 					}
+					content.WriteString("\n")
 					useCaseIndex++
 				}
 			} else {
 				// Other profiles show modules
-				content.WriteString("Available modules:\n")
+				content.WriteString(headerStyle.Render("Available modules:"))
+				content.WriteString("\n")
 				for i, moduleName := range profile.Modules {
 					if i == m.selectedModule {
-						content.WriteString(fmt.Sprintf("> %s <\n", moduleName))
+						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", moduleName)))
 					} else {
-						content.WriteString(fmt.Sprintf("  %s\n", moduleName))
+						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", moduleName)))
 					}
+					content.WriteString("\n")
 				}
 			}
 		}
 		content.WriteString("\n")
 	}
 	
-	content.WriteString("Controls:\n")
-	content.WriteString("- Arrow keys: Navigate\n")
-	content.WriteString("- Enter: Select/Confirm\n")
-	content.WriteString("- Escape: Go back\n")
-	content.WriteString("- Tab: Select packages\n")
-	content.WriteString("- ?: Help\n")
-	content.WriteString("- q or Ctrl+C: Quit\n")
+	// Controls
+	controls := []string{
+		"↑↓ Arrow keys: Navigate",
+		"⏎ Enter: Select/Confirm",
+		"⎋ Escape: Go back",
+		"⇥ Tab: Select packages",
+		"? Help: Show help",
+		"q or Ctrl+C: Quit",
+	}
+	
+	content.WriteString(controlsStyle.Render(strings.Join(controls, " • ")))
 	
 	return content.String()
 }
