@@ -117,6 +117,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedProfile = max(0, m.selectedProfile-1)
 			} else if m.currentView == "module_selection" {
 				m.selectedModule = max(0, m.selectedModule-1)
+			} else if m.currentView == "submodule_selection" {
+				m.selectedSubmodule = max(0, m.selectedSubmodule-1)
 			}
 		case "down":
 			if m.currentView == "profile_selection" {
@@ -130,6 +132,31 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					} else {
 						// Other profiles use modules
 						m.selectedModule = min(len(profile.Modules)-1, m.selectedModule+1)
+					}
+				}
+			} else if m.currentView == "submodule_selection" {
+				// Get current module and its submodules
+				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+				if exists {
+					var moduleName string
+					if m.profiles[m.selectedProfile] == "newbie" {
+						// For newbie, get use case name
+						useCaseIndex := 0
+						for useCase := range profile.UseCases {
+							if useCaseIndex == m.selectedModule {
+								moduleName = useCase
+								break
+							}
+							useCaseIndex++
+						}
+					} else {
+						// For other profiles, get module name
+						moduleName = profile.Modules[m.selectedModule]
+					}
+					
+					module, moduleExists := m.dataLoader.GetModule(moduleName)
+					if moduleExists {
+						m.selectedSubmodule = min(len(module.Submodules)-1, m.selectedSubmodule+1)
 					}
 				}
 			}
@@ -147,6 +174,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.currentView == "module_selection" {
 				// Go back to profile selection
 				m.currentView = "profile_selection"
+			} else if m.currentView == "submodule_selection" {
+				// Go back to module selection
+				m.currentView = "module_selection"
 			}
 		}
 	}
@@ -211,6 +241,53 @@ func (m model) View() string {
 					}
 					content.WriteString("\n")
 				}
+			}
+		}
+		content.WriteString("\n")
+	} else if m.currentView == "submodule_selection" {
+		// Show submodules for selected module
+		selectedProfileName := m.profiles[m.selectedProfile]
+		content.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
+		content.WriteString("\n")
+		
+		// Get current module name
+		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
+		if exists {
+			var moduleName string
+			if selectedProfileName == "newbie" {
+				// For newbie, get use case name
+				useCaseIndex := 0
+				for useCase := range profile.UseCases {
+					if useCaseIndex == m.selectedModule {
+						moduleName = useCase
+						break
+					}
+					useCaseIndex++
+				}
+			} else {
+				// For other profiles, get module name
+				moduleName = profile.Modules[m.selectedModule]
+			}
+			
+			content.WriteString(headerStyle.Render(fmt.Sprintf("Module: %s", moduleName)))
+			content.WriteString("\n")
+			
+			// Get submodules
+			module, moduleExists := m.dataLoader.GetModule(moduleName)
+			if moduleExists && len(module.Submodules) > 0 {
+				content.WriteString(headerStyle.Render("Available submodules:"))
+				content.WriteString("\n")
+				for i, submodule := range module.Submodules {
+					if i == m.selectedSubmodule {
+						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", submodule.Name)))
+					} else {
+						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", submodule.Name)))
+					}
+					content.WriteString("\n")
+				}
+			} else {
+				content.WriteString(unselectedStyle.Render("No submodules available"))
+				content.WriteString("\n")
 			}
 		}
 		content.WriteString("\n")

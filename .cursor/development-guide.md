@@ -3,6 +3,13 @@
 ## Project Overview
 A terminal-based package management tool for Arch/Arch-based distros with three user profiles and modular package selection.
 
+## Current Progress
+- ✅ **Foundation Setup**: Go + Bubble Tea TUI working
+- ✅ **Data Loading**: All modules and profiles loaded correctly
+- ✅ **Navigation**: Complete flow (profile → module → submodule) working
+- ✅ **Styling**: Beautiful modern UI with Lipgloss
+- 🚧 **Next**: Package selection and installation
+
 ## Core Features & Behaviors
 
 ### External Projects & Scripts Support
