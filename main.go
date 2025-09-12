@@ -163,6 +163,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 			}
+		case "left":
+			// Navigate back (same as escape)
+			if m.currentView == "module_selection" {
+				// Go back to profile selection
+				m.currentView = "profile_selection"
+				return m, tea.ClearScreen
+			} else if m.currentView == "submodule_selection" {
+				// Go back to module selection
+				m.currentView = "module_selection"
+				return m, tea.ClearScreen
+			}
+		case "right":
+			// Navigate forward (same as enter)
+			if m.currentView == "profile_selection" {
+				// Move to module selection for selected profile
+				m.currentView = "module_selection"
+				m.selectedModule = 0
+				return m, tea.ClearScreen
+			} else if m.currentView == "module_selection" {
+				// Move to submodule selection for selected module
+				m.currentView = "submodule_selection"
+				m.selectedSubmodule = 0
+				return m, tea.ClearScreen
+			}
 		case "enter":
 			if m.currentView == "profile_selection" {
 				// Move to module selection for selected profile
@@ -361,7 +385,7 @@ func (m model) View() string {
 	content.WriteString("\n")
 	
 	// Simplified controls at the bottom (outside the window)
-	controls := "↑↓ Navigate • ⏎ Select • ⎋ Back • q Quit"
+	controls := "↑↓ Navigate • ←→ Menu • ⏎ Select • ⎋ Back • q Quit"
 	content.WriteString(controlsStyle.Render(controls))
 	
 	return content.String()
