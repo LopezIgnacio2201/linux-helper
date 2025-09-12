@@ -727,20 +727,30 @@ func runInstallationMode() {
 func runInstallation(packagesToInstall []string) {
 	fmt.Println("🚀 Linux Package Manager - Installation Mode")
 	fmt.Println("=============================================")
-	fmt.Printf("Packages to install: %v\n\n", packagesToInstall)
+	fmt.Printf("Packages to install: %v\n", packagesToInstall)
+	fmt.Printf("Total packages: %d\n\n", len(packagesToInstall))
 
 	// Initialize package manager
 	packageManager := packages.NewPackageManager()
 
 	// Run installation
-	fmt.Println("Starting installation...")
+	fmt.Println("Starting installation process...")
+	fmt.Println("You will see real-time output from pacman/paru below:")
+	fmt.Println("=====================================================")
+
 	err := packageManager.InstallPackages(packagesToInstall)
 
+	fmt.Println("=====================================================")
 	if err != nil {
-		fmt.Printf("\n❌ Installation failed: %v\n", err)
+		fmt.Printf("❌ Installation failed: %v\n", err)
+		fmt.Println("\nTroubleshooting tips:")
+		fmt.Println("- Check if you have sufficient disk space")
+		fmt.Println("- Verify your internet connection")
+		fmt.Println("- Try running the installation manually to see detailed errors")
 		os.Exit(1)
 	} else {
-		fmt.Println("\n✅ Installation completed successfully!")
-		fmt.Println("You can now run the package manager again to select more packages.")
+		fmt.Println("✅ Installation completed successfully!")
+		fmt.Printf("All %d packages have been installed.\n", len(packagesToInstall))
+		fmt.Println("\nYou can now run the package manager again to select more packages.")
 	}
 }

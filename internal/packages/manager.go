@@ -1,7 +1,9 @@
 package packages
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -9,6 +11,48 @@ import (
 // PackageManager handles package installation operations
 type PackageManager struct {
 	aurHelper string
+}
+
+// streamCommandOutput runs a command and streams its output in real-time
+func streamCommandOutput(cmd *exec.Cmd) error {
+	// Create pipes for stdout and stderr
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return fmt.Errorf("failed to create stdout pipe: %w", err)
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return fmt.Errorf("failed to create stderr pipe: %w", err)
+	}
+
+	// Start the command
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start command: %w", err)
+	}
+
+	// Stream stdout
+	go func() {
+		scanner := bufio.NewScanner(stdout)
+		for scanner.Scan() {
+			fmt.Println(scanner.Text())
+		}
+	}()
+
+	// Stream stderr
+	go func() {
+		scanner := bufio.NewScanner(stderr)
+		for scanner.Scan() {
+			fmt.Fprintln(os.Stderr, scanner.Text())
+		}
+	}()
+
+	// Wait for command to complete
+	if err := cmd.Wait(); err != nil {
+		return fmt.Errorf("command failed: %w", err)
+	}
+
+	return nil
 }
 
 // NewPackageManager creates a new package manager instance
@@ -97,12 +141,18 @@ func (pm *PackageManager) installOfficialPackages(packageNames []string) error {
 	args := append([]string{"pacman", "-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command("sudo", args...)
 
-	// Capture output instead of redirecting to avoid terminal corruption
-	output, err := cmd.CombinedOutput()
+	// Stream output in real-time
+	fmt.Printf("Installing official packages: %v\n", packageNames)
+	fmt.Println("Running: sudo pacman -S --noconfirm", strings.Join(packageNames, " "))
+	fmt.Println("----------------------------------------")
+
+	err := streamCommandOutput(cmd)
 	if err != nil {
-		return fmt.Errorf("pacman installation failed: %s", string(output))
+		return fmt.Errorf("pacman installation failed: %w", err)
 	}
 
+	fmt.Println("----------------------------------------")
+	fmt.Println("Official packages installation completed!")
 	return nil
 }
 
@@ -119,12 +169,18 @@ func (pm *PackageManager) installAURPackages(packageNames []string) error {
 	args := append([]string{"-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command(pm.aurHelper, args...)
 
-	// Capture output instead of redirecting to avoid terminal corruption
-	output, err := cmd.CombinedOutput()
+	// Stream output in real-time
+	fmt.Printf("Installing AUR packages: %v\n", packageNames)
+	fmt.Printf("Running: %s -S --noconfirm %s\n", pm.aurHelper, strings.Join(packageNames, " "))
+	fmt.Println("----------------------------------------")
+
+	err := streamCommandOutput(cmd)
 	if err != nil {
-		return fmt.Errorf("%s installation failed: %s", pm.aurHelper, string(output))
+		return fmt.Errorf("%s installation failed: %w", pm.aurHelper, err)
 	}
 
+	fmt.Println("----------------------------------------")
+	fmt.Println("AUR packages installation completed!")
 	return nil
 }
 
