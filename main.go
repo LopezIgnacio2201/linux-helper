@@ -42,10 +42,10 @@ var (
 			Margin(2, 0, 1, 0)
 	
 	windowStyle = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(borderColor).
+			Border(lipgloss.DoubleBorder()).
+			BorderForeground(primaryColor).
 			Padding(1, 2).
-			Margin(0, 2)
+			Margin(1, 0)
 	
 	headerStyle = lipgloss.NewStyle().
 			Foreground(secondaryColor).
@@ -64,7 +64,9 @@ var (
 	
 	controlsStyle = lipgloss.NewStyle().
 			Foreground(mutedColor).
-			Margin(1, 0, 0, 0)
+			Italic(true).
+			Margin(1, 0, 0, 0).
+			Align(lipgloss.Center)
 )
 
 type model struct {
@@ -104,7 +106,7 @@ func initialModel() model {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return tea.ClearScreen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -166,18 +168,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Move to module selection for selected profile
 				m.currentView = "module_selection"
 				m.selectedModule = 0
+				return m, tea.ClearScreen
 			} else if m.currentView == "module_selection" {
 				// Move to submodule selection for selected module
 				m.currentView = "submodule_selection"
 				m.selectedSubmodule = 0
+				return m, tea.ClearScreen
 			}
 		case "esc":
 			if m.currentView == "module_selection" {
 				// Go back to profile selection
 				m.currentView = "profile_selection"
+				return m, tea.ClearScreen
 			} else if m.currentView == "submodule_selection" {
 				// Go back to module selection
 				m.currentView = "module_selection"
+				return m, tea.ClearScreen
 			}
 		}
 	}
@@ -190,7 +196,7 @@ func (m model) View() string {
 	// Clear screen and add title with top padding
 	content.WriteString("\033[2J\033[H") // Clear screen and move cursor to top
 	content.WriteString(titleStyle.Render("🚀 Linux Package Manager TUI"))
-	content.WriteString("\n\n")
+	content.WriteString("\n")
 	
 	// Window content (inside the bordered box)
 	var windowContent strings.Builder
@@ -352,18 +358,11 @@ func (m model) View() string {
 	
 	// Apply window border to content
 	content.WriteString(windowStyle.Render(windowContent.String()))
-	content.WriteString("\n\n")
+	content.WriteString("\n")
 	
-	// Controls at the bottom (outside the window)
-	controls := []string{
-		"↑↓ Navigate",
-		"⏎ Select", 
-		"⎋ Back",
-		"⇥ Packages",
-		"? Help",
-		"q Quit",
-	}
-	content.WriteString(controlsStyle.Render(strings.Join(controls, " • ")))
+	// Simplified controls at the bottom (outside the window)
+	controls := "↑↓ Navigate • ⏎ Select • ⎋ Back • q Quit"
+	content.WriteString(controlsStyle.Render(controls))
 	
 	return content.String()
 }
