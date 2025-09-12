@@ -6,9 +6,33 @@ A terminal-based package management tool for Arch/Arch-based distros with three 
 ## Current Progress
 - ✅ **Foundation Setup**: Go + Bubble Tea TUI working
 - ✅ **Data Loading**: All modules and profiles loaded correctly
-- ✅ **Navigation**: Complete flow (profile → module → submodule) working
+- ✅ **Navigation**: Complete flow (profile → module → submodule → package selection) working
 - ✅ **Styling**: Beautiful modern UI with Lipgloss
-- 🚧 **Next**: Package selection and installation
+- ✅ **Data Structure**: Reorganized with actual data files in resources/
+- ✅ **Package Selection**: TAB key selection with state persistence working
+- 🚧 **Next**: Package installation logic and advanced features
+
+## Data Structure
+
+### File Organization
+- **resources/**: Actual data files used by the script
+  - `modules.txt`: Module definitions with type (DIRECT_PACKAGES or SUBMODULES)
+  - `packages.txt`: Package definitions with module:submodule:package format
+  - `profiles.txt`: Profile definitions with profile:module format
+- **.cursor/**: Guide files for reference only (not used by script)
+  - `modules-and-packages.txt`: Comprehensive guide with all modules/packages
+  - `packages/`: Profile guide files
+  - `development-guide.md`: This file
+  - `development-status.md`: Current development status
+
+### Data Format
+- **modules.txt**: `MODULE_NAME:DIRECT_PACKAGES` or `MODULE_NAME:SUBMODULES`
+- **packages.txt**: `MODULE_NAME:SUBMODULE_NAME:PACKAGE_NAME`
+- **profiles.txt**: `PROFILE_NAME:MODULE_NAME`
+
+### Module Types
+- **Direct Package Modules**: Browsers, File Managers (skip submodule selection)
+- **Submodule Modules**: Terminals, Gaming, Development Tools, etc. (show submodule selection)
 
 ## Core Features & Behaviors
 

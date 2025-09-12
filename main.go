@@ -8,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"linux-package-manager/internal/data"
+	"linux-package-manager/internal/packages"
 )
 
 // Helper functions
@@ -72,11 +73,12 @@ var (
 type model struct {
 	message    string
 	dataLoader *data.DataLoader
+	packageManager *packages.PackageManager
 	modules    []string
 	profiles   []string
 	
 	// Navigation state
-	currentView string // "profile_selection", "module_selection", "submodule_selection", "package_selection"
+	currentView string // "profile_selection", "module_selection", "submodule_selection", "package_selection", "installation"
 	selectedProfile int
 	selectedModule int
 	selectedSubmodule int
@@ -84,6 +86,11 @@ type model struct {
 	
 	// Package selection state
 	selectedPackages map[string]bool // Track which packages are selected
+	
+	// Installation state
+	installing bool
+	installProgress string
+	installError string
 }
 
 func initialModel() model {
@@ -97,9 +104,13 @@ func initialModel() model {
 		}
 	}
 
+	// Initialize package manager
+	packageManager := packages.NewPackageManager()
+
 	return model{
 		message:    "Linux Package Manager TUI",
 		dataLoader: loader,
+		packageManager: packageManager,
 		modules:    loader.ListModules(),
 		profiles:   loader.ListProfiles(),
 		currentView: "profile_selection",
@@ -108,12 +119,61 @@ func initialModel() model {
 		selectedSubmodule: 0,
 		selectedPackage: 0,
 		selectedPackages: make(map[string]bool),
+		installing: false,
+		installProgress: "",
+		installError: "",
 	}
 }
 
 func (m model) Init() tea.Cmd {
 	return tea.ClearScreen
 }
+
+// installSelectedPackages starts the installation process
+func (m model) installSelectedPackages() (tea.Model, tea.Cmd) {
+	// Get selected packages
+	var packagesToInstall []string
+	for packageName, isSelected := range m.selectedPackages {
+		if isSelected {
+			packagesToInstall = append(packagesToInstall, packageName)
+		}
+	}
+	
+	if len(packagesToInstall) == 0 {
+		// No packages selected, go back to package selection
+		return m, tea.ClearScreen
+	}
+	
+	// Start installation
+	m.currentView = "installation"
+	m.installing = true
+	m.installProgress = "Starting installation..."
+	m.installError = ""
+	
+	// Run installation in background
+	return m, tea.Batch(
+		tea.ClearScreen,
+		m.runInstallation(packagesToInstall),
+	)
+}
+
+// runInstallation runs the package installation
+func (m model) runInstallation(packagesToInstall []string) tea.Cmd {
+	return func() tea.Msg {
+		err := m.packageManager.InstallPackages(packagesToInstall)
+		if err != nil {
+			return installationErrorMsg{error: err}
+		}
+		return installationCompleteMsg{}
+	}
+}
+
+// Message types for installation
+type installationErrorMsg struct {
+	error error
+}
+
+type installationCompleteMsg struct{}
 
 // getCurrentPackages returns the packages for the currently selected submodule
 func (m model) getCurrentPackages() []data.Package {
@@ -148,6 +208,16 @@ func (m model) getCurrentPackages() []data.Package {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case installationErrorMsg:
+		m.installing = false
+		m.installError = msg.error.Error()
+		m.installProgress = "Installation failed"
+		return m, nil
+	case installationCompleteMsg:
+		m.installing = false
+		m.installProgress = "Installation completed successfully!"
+		m.installError = ""
+		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
@@ -202,9 +272,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 			} else if m.currentView == "package_selection" {
-				// Get current packages count
+				// Get current packages count (including install option)
 				packages := m.getCurrentPackages()
-				m.selectedPackage = min(len(packages)-1, m.selectedPackage+1)
+				m.selectedPackage = min(len(packages), m.selectedPackage+1)
 			}
 		case "left":
 			// Navigate back (same as escape)
@@ -346,6 +416,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.currentView = "package_selection"
 				m.selectedPackage = 0
 				return m, tea.ClearScreen
+			} else if m.currentView == "package_selection" {
+				// Check if we're at the "Ready to install" option
+				packages := m.getCurrentPackages()
+				if m.selectedPackage >= len(packages) {
+					// User selected the "Ready to install" option
+					return m.installSelectedPackages()
+				}
 			}
 		case "esc":
 			if m.currentView == "module_selection" {
@@ -359,6 +436,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.currentView == "package_selection" {
 				// Go back to submodule selection
 				m.currentView = "submodule_selection"
+				return m, tea.ClearScreen
+			} else if m.currentView == "installation" {
+				// Go back to package selection
+				m.currentView = "package_selection"
 				return m, tea.ClearScreen
 			}
 		case "tab":
@@ -592,13 +673,37 @@ func (m model) View() string {
 						windowContent.WriteString("\n")
 					}
 					
-					// Add confirm option at the bottom
+					// Add install option as a selectable item
 					windowContent.WriteString("\n")
-					windowContent.WriteString(headerStyle.Render("🚀 Ready to install selected packages"))
+					if m.selectedPackage == len(packages) {
+						windowContent.WriteString(selectedStyle.Render("▶ 🚀 Install selected packages"))
+					} else {
+						windowContent.WriteString(unselectedStyle.Render("  🚀 Install selected packages"))
+					}
 				} else {
 					windowContent.WriteString(unselectedStyle.Render("ℹ️ No packages available"))
 				}
 			}
+		}
+	} else if m.currentView == "installation" {
+		// Installation view inside window
+		windowContent.WriteString(headerStyle.Render("🚀 Installing Packages"))
+		windowContent.WriteString("\n\n")
+		
+		if m.installing {
+			windowContent.WriteString(selectedStyle.Render("⏳ " + m.installProgress))
+			windowContent.WriteString("\n\n")
+			windowContent.WriteString(unselectedStyle.Render("Please wait while packages are being installed..."))
+		} else if m.installError != "" {
+			windowContent.WriteString(selectedStyle.Render("❌ " + m.installProgress))
+			windowContent.WriteString("\n\n")
+			windowContent.WriteString(unselectedStyle.Render("Error: " + m.installError))
+			windowContent.WriteString("\n\n")
+			windowContent.WriteString(headerStyle.Render("Press ESC to go back"))
+		} else {
+			windowContent.WriteString(selectedStyle.Render("✅ " + m.installProgress))
+			windowContent.WriteString("\n\n")
+			windowContent.WriteString(headerStyle.Render("Press ESC to go back"))
 		}
 	}
 	
@@ -610,6 +715,8 @@ func (m model) View() string {
 	var controls string
 	if m.currentView == "package_selection" {
 		controls = "↑↓ Navigate • ←→ Menu • ⇥ Select • ⏎ Install • ⎋ Back • q Quit"
+	} else if m.currentView == "installation" {
+		controls = "⎋ Back • q Quit"
 	} else {
 		controls = "↑↓ Navigate • ←→ Menu • ⏎ Select • ⎋ Back • q Quit"
 	}
