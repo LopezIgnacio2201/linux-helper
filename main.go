@@ -3,19 +3,35 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"linux-package-manager/internal/data"
 )
 
 type model struct {
 	message    string
-	keyPressed string
+	dataLoader *data.DataLoader
+	modules    []string
+	profiles   []string
 }
 
 func initialModel() model {
+	// Initialize data loader
+	loader := data.NewDataLoader()
+	
+	// Load all data
+	if err := loader.LoadAllData(); err != nil {
+		return model{
+			message: fmt.Sprintf("Error loading data: %v", err),
+		}
+	}
+
 	return model{
-		message:    "Linux Package Manager TUI - Keybind Test",
-		keyPressed: "No key pressed yet",
+		message:    "Linux Package Manager TUI",
+		dataLoader: loader,
+		modules:    loader.ListModules(),
+		profiles:   loader.ListProfiles(),
 	}
 }
 
@@ -29,43 +45,35 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "up":
-			m.keyPressed = "↑ Up arrow pressed"
-		case "down":
-			m.keyPressed = "↓ Down arrow pressed"
-		case "left":
-			m.keyPressed = "← Left arrow pressed"
-		case "right":
-			m.keyPressed = "→ Right arrow pressed"
-		case "enter":
-			m.keyPressed = "⏎ Enter pressed"
-		case "esc":
-			m.keyPressed = "⎋ Escape pressed"
-		case "tab":
-			m.keyPressed = "⇥ Tab pressed"
-		case "?":
-			m.keyPressed = "? Help key pressed"
-		default:
-			m.keyPressed = fmt.Sprintf("Key pressed: %s", msg.String())
+		// TODO: Add navigation logic here
 		}
 	}
 	return m, nil
 }
 
 func (m model) View() string {
-	return fmt.Sprintf(`%s
-
-%s
-
-Keybind Test:
-- Arrow keys: Navigate
-- Enter: Select/Confirm
-- Escape: Go back
-- Tab: Select packages
-- ?: Help
-- q or Ctrl+C: Quit
-
-Press any key to test...`, m.message, m.keyPressed)
+	var content strings.Builder
+	
+	content.WriteString(fmt.Sprintf("%s\n\n", m.message))
+	
+	// Show profiles for selection
+	if len(m.profiles) > 0 {
+		content.WriteString("Select a profile:\n")
+		for _, profile := range m.profiles {
+			content.WriteString(fmt.Sprintf("- %s\n", profile))
+		}
+		content.WriteString("\n")
+	}
+	
+	content.WriteString("Controls:\n")
+	content.WriteString("- Arrow keys: Navigate\n")
+	content.WriteString("- Enter: Select/Confirm\n")
+	content.WriteString("- Escape: Go back\n")
+	content.WriteString("- Tab: Select packages\n")
+	content.WriteString("- ?: Help\n")
+	content.WriteString("- q or Ctrl+C: Quit\n")
+	
+	return content.String()
 }
 
 func main() {
