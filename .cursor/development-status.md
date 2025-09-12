@@ -1,6 +1,6 @@
 # Development Status - Linux Package Manager Tool
 
-## Current Status: **SUBMODULE NAVIGATION COMPLETE**
+## Current Status: **WINDOW-LIKE DESIGN COMPLETE**
 
 ### ✅ Completed
 - Project structure and requirements defined
@@ -25,6 +25,11 @@
 - **Beautiful styling implemented** ✓
 - **Submodule navigation implemented** ✓
 - **Complete navigation flow working** ✓
+- **Window-like design with borders** ✓
+- **Clean layout structure (title → window → controls)** ✓
+- **Screen clearing on menu changes** ✓
+- **Balanced refined styling (not overkill)** ✓
+- **Controls positioned at bottom outside window** ✓
 
 ### 🚧 Next Phase: **PACKAGE SELECTION & INSTALLATION**
 - [ ] Implement package selection with TAB key
@@ -38,7 +43,8 @@
 2. **Data Loading** ✅
 3. **Basic Navigation** ✅
 4. **Submodule Navigation** ✅
-5. **Package Selection & Installation** (Current)
+5. **Window-like Design & Styling** ✅
+6. **Package Selection & Installation** (Current)
 4. **Package Selection** (Selection state management)
 5. **Package Installation** (pacman/paru integration)
 6. **Advanced Features** (External projects, extras)
@@ -77,15 +83,24 @@ install.sh (entry point)
 - Beautiful styling implemented with Lipgloss (teal/purple/amber theme)
 
 ### 🎨 Current Styling
-- **Title**: Emoji + teal color + bold
+- **Window Design**: Clean bordered window with content inside
+- **Title**: Emoji + teal color + bold with top padding
 - **Headers**: Purple color + bold
 - **Selection**: Amber highlight with dark background + arrow indicator
-- **Controls**: Muted gray with bullet separators
-- **Theme**: Modern, minimalistic, professional
+- **Controls**: Muted gray with bullet separators, positioned at bottom
+- **Layout**: Title → Window → Controls structure
+- **Borders**: Rounded borders with slate color
+- **Theme**: Modern, minimalistic, professional window-like design
 
 ### 🚀 Ready for Next Phase
 - Complete navigation flow working (profile → module → submodule)
-- Beautiful styling implemented
+- Beautiful window-like design implemented
+- Clean layout with proper borders and spacing
+- Screen clearing and proper window management
 - All keybinds working (arrows, enter, esc, q)
 - Data loading and parsing working correctly
 - Ready to implement package selection and installation
+
+### 📝 Known Issues
+- Minor spacing issue between icons and text in borders (user will fix manually)
+- All core functionality working correctly

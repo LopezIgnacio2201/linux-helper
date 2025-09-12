@@ -25,20 +25,27 @@ func max(a, b int) int {
 	return b
 }
 
-// Styling
+// Window-like Styling
 var (
-	// Colors
+	// Color Palette
 	primaryColor   = lipgloss.Color("#00D4AA") // Teal
 	secondaryColor = lipgloss.Color("#7C3AED") // Purple
 	accentColor    = lipgloss.Color("#F59E0B") // Amber
 	textColor      = lipgloss.Color("#F8FAFC") // Light gray
 	mutedColor     = lipgloss.Color("#64748B") // Gray
+	borderColor    = lipgloss.Color("#475569") // Slate
 	
-	// Styles
+	// Window Styles
 	titleStyle = lipgloss.NewStyle().
 			Foreground(primaryColor).
 			Bold(true).
-			Margin(1, 0)
+			Margin(2, 0, 1, 0)
+	
+	windowStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(borderColor).
+			Padding(1, 2).
+			Margin(0, 2)
 	
 	headerStyle = lipgloss.NewStyle().
 			Foreground(secondaryColor).
@@ -57,13 +64,7 @@ var (
 	
 	controlsStyle = lipgloss.NewStyle().
 			Foreground(mutedColor).
-			Margin(1, 0)
-	
-	boxStyle = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(primaryColor).
-			Padding(1, 2).
-			Margin(1, 0)
+			Margin(1, 0, 0, 0)
 )
 
 type model struct {
@@ -186,69 +187,115 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	var content strings.Builder
 	
-	// Title
+	// Clear screen and add title with top padding
+	content.WriteString("\033[2J\033[H") // Clear screen and move cursor to top
 	content.WriteString(titleStyle.Render("🚀 Linux Package Manager TUI"))
 	content.WriteString("\n\n")
 	
+	// Window content (inside the bordered box)
+	var windowContent strings.Builder
+	
 	if m.currentView == "profile_selection" {
-		// Show profiles for selection
+		// Profile selection inside window
 		if len(m.profiles) > 0 {
-			content.WriteString(headerStyle.Render("Select a profile:"))
-			content.WriteString("\n")
+			windowContent.WriteString(headerStyle.Render("👤 Select a profile"))
+			windowContent.WriteString("\n\n")
 			
 			for i, profile := range m.profiles {
-				if i == m.selectedProfile {
-					content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", profile)))
-				} else {
-					content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", profile)))
+				profileIcon := "🔰"
+				if profile == "common" {
+					profileIcon = "⚡"
+				} else if profile == "poweruser" {
+					profileIcon = "🔥"
 				}
-				content.WriteString("\n")
+				
+				if i == m.selectedProfile {
+					windowContent.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s %s", profileIcon, profile)))
+				} else {
+					windowContent.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s %s", profileIcon, profile)))
+				}
+				windowContent.WriteString("\n")
 			}
-			content.WriteString("\n")
 		}
 	} else if m.currentView == "module_selection" {
-		// Show modules for selected profile
+		// Module selection inside window
 		selectedProfileName := m.profiles[m.selectedProfile]
-		content.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
-		content.WriteString("\n")
+		profileIcon := "🔰"
+		if selectedProfileName == "common" {
+			profileIcon = "⚡"
+		} else if selectedProfileName == "poweruser" {
+			profileIcon = "🔥"
+		}
+		
+		windowContent.WriteString(headerStyle.Render(fmt.Sprintf("%s Profile: %s", profileIcon, selectedProfileName)))
+		windowContent.WriteString("\n\n")
 		
 		// Get available modules for this profile
 		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
 		if exists {
 			if selectedProfileName == "newbie" {
-				// Newbie profile shows use cases instead of modules
-				content.WriteString(headerStyle.Render("Select a use case:"))
-				content.WriteString("\n")
+				// Newbie profile shows use cases
+				windowContent.WriteString(headerStyle.Render("🎯 Select a use case"))
+				windowContent.WriteString("\n\n")
+				
 				useCaseIndex := 0
 				for useCase := range profile.UseCases {
-					if useCaseIndex == m.selectedModule {
-						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", useCase)))
-					} else {
-						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", useCase)))
+					useCaseIcon := "🎮"
+					if strings.Contains(strings.ToLower(useCase), "gaming") {
+						useCaseIcon = "🎮"
+					} else if strings.Contains(strings.ToLower(useCase), "programming") {
+						useCaseIcon = "💻"
+					} else if strings.Contains(strings.ToLower(useCase), "editing") {
+						useCaseIcon = "🎨"
+					} else if strings.Contains(strings.ToLower(useCase), "cybersecurity") {
+						useCaseIcon = "🔒"
+					} else if strings.Contains(strings.ToLower(useCase), "day") {
+						useCaseIcon = "📅"
 					}
-					content.WriteString("\n")
+					
+					if useCaseIndex == m.selectedModule {
+						windowContent.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s %s", useCaseIcon, useCase)))
+					} else {
+						windowContent.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s %s", useCaseIcon, useCase)))
+					}
+					windowContent.WriteString("\n")
 					useCaseIndex++
 				}
 			} else {
 				// Other profiles show modules
-				content.WriteString(headerStyle.Render("Available modules:"))
-				content.WriteString("\n")
+				windowContent.WriteString(headerStyle.Render("📦 Available modules"))
+				windowContent.WriteString("\n\n")
+				
 				for i, moduleName := range profile.Modules {
-					if i == m.selectedModule {
-						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", moduleName)))
-					} else {
-						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", moduleName)))
+					moduleIcon := "📦"
+					if strings.Contains(strings.ToLower(moduleName), "browser") {
+						moduleIcon = "🌐"
+					} else if strings.Contains(strings.ToLower(moduleName), "terminal") {
+						moduleIcon = "💻"
+					} else if strings.Contains(strings.ToLower(moduleName), "gaming") {
+						moduleIcon = "🎮"
+					} else if strings.Contains(strings.ToLower(moduleName), "development") {
+						moduleIcon = "⚙️"
+					} else if strings.Contains(strings.ToLower(moduleName), "cybersecurity") {
+						moduleIcon = "🔒"
+					} else if strings.Contains(strings.ToLower(moduleName), "privacy") {
+						moduleIcon = "🛡️"
 					}
-					content.WriteString("\n")
+					
+					if i == m.selectedModule {
+						windowContent.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s %s", moduleIcon, moduleName)))
+					} else {
+						windowContent.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s %s", moduleIcon, moduleName)))
+					}
+					windowContent.WriteString("\n")
 				}
 			}
 		}
-		content.WriteString("\n")
 	} else if m.currentView == "submodule_selection" {
-		// Show submodules for selected module
+		// Submodule selection inside window
 		selectedProfileName := m.profiles[m.selectedProfile]
-		content.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
-		content.WriteString("\n")
+		windowContent.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
+		windowContent.WriteString("\n\n")
 		
 		// Get current module name
 		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
@@ -269,40 +316,53 @@ func (m model) View() string {
 				moduleName = profile.Modules[m.selectedModule]
 			}
 			
-			content.WriteString(headerStyle.Render(fmt.Sprintf("Module: %s", moduleName)))
-			content.WriteString("\n")
+			windowContent.WriteString(headerStyle.Render(fmt.Sprintf("📁 Module: %s", moduleName)))
+			windowContent.WriteString("\n\n")
 			
 			// Get submodules
 			module, moduleExists := m.dataLoader.GetModule(moduleName)
 			if moduleExists && len(module.Submodules) > 0 {
-				content.WriteString(headerStyle.Render("Available submodules:"))
-				content.WriteString("\n")
+				windowContent.WriteString(headerStyle.Render("🔧 Available submodules"))
+				windowContent.WriteString("\n\n")
+				
 				for i, submodule := range module.Submodules {
-					if i == m.selectedSubmodule {
-						content.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s", submodule.Name)))
-					} else {
-						content.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s", submodule.Name)))
+					submoduleIcon := "🔧"
+					if strings.Contains(strings.ToLower(submodule.Name), "terminal") {
+						submoduleIcon = "💻"
+					} else if strings.Contains(strings.ToLower(submodule.Name), "shell") {
+						submoduleIcon = "🐚"
+					} else if strings.Contains(strings.ToLower(submodule.Name), "editor") {
+						submoduleIcon = "✏️"
+					} else if strings.Contains(strings.ToLower(submodule.Name), "language") {
+						submoduleIcon = "📝"
 					}
-					content.WriteString("\n")
+					
+					if i == m.selectedSubmodule {
+						windowContent.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s %s", submoduleIcon, submodule.Name)))
+					} else {
+						windowContent.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s %s", submoduleIcon, submodule.Name)))
+					}
+					windowContent.WriteString("\n")
 				}
 			} else {
-				content.WriteString(unselectedStyle.Render("No submodules available"))
-				content.WriteString("\n")
+				windowContent.WriteString(unselectedStyle.Render("ℹ️ No submodules available"))
 			}
 		}
-		content.WriteString("\n")
 	}
 	
-	// Controls
+	// Apply window border to content
+	content.WriteString(windowStyle.Render(windowContent.String()))
+	content.WriteString("\n\n")
+	
+	// Controls at the bottom (outside the window)
 	controls := []string{
-		"↑↓ Arrow keys: Navigate",
-		"⏎ Enter: Select/Confirm",
-		"⎋ Escape: Go back",
-		"⇥ Tab: Select packages",
-		"? Help: Show help",
-		"q or Ctrl+C: Quit",
+		"↑↓ Navigate",
+		"⏎ Select", 
+		"⎋ Back",
+		"⇥ Packages",
+		"? Help",
+		"q Quit",
 	}
-	
 	content.WriteString(controlsStyle.Render(strings.Join(controls, " • ")))
 	
 	return content.String()
@@ -315,3 +375,4 @@ func main() {
 		os.Exit(1)
 	}
 }
+
