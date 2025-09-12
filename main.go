@@ -161,6 +161,11 @@ func (m model) installAllSelectedPackages() (tea.Model, tea.Cmd) {
 // runInstallation runs the package installation
 func (m model) runInstallation(packagesToInstall []string) tea.Cmd {
 	return func() tea.Msg {
+		// Clear the screen before installation
+		fmt.Print("\033[2J\033[H")
+		fmt.Println("🚀 Installing packages...")
+		fmt.Printf("Packages to install: %v\n\n", packagesToInstall)
+		
 		err := m.packageManager.InstallPackages(packagesToInstall)
 		if err != nil {
 			return installationErrorMsg{error: err}
@@ -455,8 +460,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.currentView = "submodule_selection"
 				return m, tea.ClearScreen
 			} else if m.currentView == "installation" {
-				// Go back to package selection
-				m.currentView = "package_selection"
+				// Go back to module selection
+				m.currentView = "module_selection"
 				return m, tea.ClearScreen
 			}
 		case "tab":
@@ -713,16 +718,20 @@ func (m model) View() string {
 			windowContent.WriteString(selectedStyle.Render("⏳ " + m.installProgress))
 			windowContent.WriteString("\n\n")
 			windowContent.WriteString(unselectedStyle.Render("Please wait while packages are being installed..."))
+			windowContent.WriteString("\n")
+			windowContent.WriteString(unselectedStyle.Render("You should see pacman/paru output below this window."))
 		} else if m.installError != "" {
 			windowContent.WriteString(selectedStyle.Render("❌ " + m.installProgress))
 			windowContent.WriteString("\n\n")
 			windowContent.WriteString(unselectedStyle.Render("Error: " + m.installError))
 			windowContent.WriteString("\n\n")
-			windowContent.WriteString(headerStyle.Render("Press ESC to go back"))
+			windowContent.WriteString(headerStyle.Render("Press ESC to go back to module selection"))
 		} else {
 			windowContent.WriteString(selectedStyle.Render("✅ " + m.installProgress))
 			windowContent.WriteString("\n\n")
-			windowContent.WriteString(headerStyle.Render("Press ESC to go back"))
+			windowContent.WriteString(unselectedStyle.Render("All packages have been installed successfully!"))
+			windowContent.WriteString("\n\n")
+			windowContent.WriteString(headerStyle.Render("Press ESC to go back to module selection"))
 		}
 	}
 	

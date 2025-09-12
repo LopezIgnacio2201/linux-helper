@@ -62,3 +62,96 @@ Office and Productivity:Text Editors:leafpad
 Office and Productivity:Text Editors:nano
 Office and Productivity:Text Editors:vim
 Office and Productivity:Text Editors:neovim
+
+# Gaming (submodules)
+Gaming:Steam:steam
+Gaming:Steam:steam-native-runtime
+Gaming:Steam:steam-devices
+
+Gaming:Emulators:retroarch
+Gaming:Emulators:pcsx2
+Gaming:Emulators:rpcs3
+Gaming:Emulators:yuzu
+
+Gaming:Game Launchers:lutris
+Gaming:Game Launchers:heroic-games-launcher
+Gaming:Game Launchers:minigalaxy
+
+# Communication (submodules)
+Communication:Instant Messaging:discord
+Communication:Instant Messaging:telegram-desktop
+Communication:Instant Messaging:signal-desktop
+Communication:Instant Messaging:whatsapp-for-linux
+
+Communication:Email:thunderbird
+Communication:Email:geary
+Communication:Email:mutt
+
+Communication:Video Calling:zoom
+Communication:Video Calling:teams
+Communication:Video Calling:skype
+
+# Graphics and Design (submodules)
+Graphics and Design:Image Editing:gimp
+Graphics and Design:Image Editing:krita
+Graphics and Design:Image Editing:inkscape
+
+Graphics and Design:3D Modeling:blender
+Graphics and Design:3D Modeling:freecad
+
+Graphics and Design:Vector Graphics:inkscape
+Graphics and Design:Vector Graphics:scribus
+
+# Development Tools (submodules)
+Development Tools:IDEs:code
+Development Tools:IDEs:vscodium
+Development Tools:IDEs:android-studio
+Development Tools:IDEs:netbeans
+
+Development Tools:Version Control:git
+Development Tools:Version Control:github-cli
+
+Development Tools:Languages:python
+Development Tools:Languages:nodejs
+Development Tools:Languages:go
+Development Tools:Languages:rust
+Development Tools:Languages:java-openjdk
+
+Development Tools:Build Tools:make
+Development Tools:Build Tools:cmake
+Development Tools:Build Tools:meson
+Development Tools:Build Tools:ninja
+
+# Utilities (submodules)
+Utilities:System Monitoring:htop
+Utilities:System Monitoring:btop
+Utilities:System Monitoring:neofetch
+
+Utilities:File Management:ranger
+Utilities:File Management:mc
+Utilities:File Management:tree
+
+Utilities:Network:curl
+Utilities:Network:wget
+Utilities:Network:openssh
+
+# Cybersecurity (submodules)
+Cybersecurity:Network Security:nmap
+Cybersecurity:Network Security:wireshark
+Cybersecurity:Network Security:burpsuite
+
+Cybersecurity:Forensics:autopsy
+Cybersecurity:Forensics:volatility
+
+Cybersecurity:Password Security:hashcat
+Cybersecurity:Password Security:john
+
+# Privacy (submodules)
+Privacy:VPNs:openvpn
+Privacy:VPNs:wireguard-tools
+
+Privacy:Encryption:gnupg
+Privacy:Encryption:veracrypt
+
+Privacy:Browsers:tor-browser
+Privacy:Browsers:librewolf

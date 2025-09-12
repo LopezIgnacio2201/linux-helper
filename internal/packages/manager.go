@@ -2,6 +2,7 @@ package packages
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -97,9 +98,13 @@ func (pm *PackageManager) installOfficialPackages(packageNames []string) error {
 	args := append([]string{"pacman", "-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command("sudo", args...)
 	
-	output, err := cmd.CombinedOutput()
+	// Set up real-time output
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	
+	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("pacman installation failed: %s", string(output))
+		return fmt.Errorf("pacman installation failed: %w", err)
 	}
 	
 	return nil
@@ -118,9 +123,13 @@ func (pm *PackageManager) installAURPackages(packageNames []string) error {
 	args := append([]string{"-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command(pm.aurHelper, args...)
 	
-	output, err := cmd.CombinedOutput()
+	// Set up real-time output
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	
+	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("%s installation failed: %s", pm.aurHelper, string(output))
+		return fmt.Errorf("%s installation failed: %w", pm.aurHelper, err)
 	}
 	
 	return nil

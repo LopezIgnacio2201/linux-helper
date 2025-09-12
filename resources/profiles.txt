@@ -3,10 +3,10 @@
 
 # Newbie profile (use cases)
 newbie:Gaming
-newbie:Basic Development
-newbie:Daily Use
-newbie:Media Editing
-newbie:Cybersecurity Basics
+newbie:Development Tools
+newbie:Browsers
+newbie:Office and Productivity
+newbie:Cybersecurity
 
 # Common user profile
 common:Browsers
