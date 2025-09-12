@@ -129,9 +129,9 @@ func (m model) Init() tea.Cmd {
 	return tea.ClearScreen
 }
 
-// installSelectedPackages starts the installation process
-func (m model) installSelectedPackages() (tea.Model, tea.Cmd) {
-	// Get selected packages
+// installAllSelectedPackages starts the installation process for all selected packages across all modules
+func (m model) installAllSelectedPackages() (tea.Model, tea.Cmd) {
+	// Get all selected packages from all modules and submodules
 	var packagesToInstall []string
 	for packageName, isSelected := range m.selectedPackages {
 		if isSelected {
@@ -140,7 +140,8 @@ func (m model) installSelectedPackages() (tea.Model, tea.Cmd) {
 	}
 	
 	if len(packagesToInstall) == 0 {
-		// No packages selected, go back to package selection
+		// No packages selected, show message and stay in module selection
+		m.installError = "No packages selected. Please select packages from modules first."
 		return m, tea.ClearScreen
 	}
 	
@@ -226,6 +227,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.currentView == "profile_selection" {
 				m.selectedProfile = max(0, m.selectedProfile-1)
 			} else if m.currentView == "module_selection" {
+				// Navigate up in module selection
 				m.selectedModule = max(0, m.selectedModule-1)
 			} else if m.currentView == "submodule_selection" {
 				m.selectedSubmodule = max(0, m.selectedSubmodule-1)
@@ -242,8 +244,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						// Newbie profile uses use cases
 						m.selectedModule = min(len(profile.UseCases)-1, m.selectedModule+1)
 					} else {
-						// Other profiles use modules
-						m.selectedModule = min(len(profile.Modules)-1, m.selectedModule+1)
+						// Other profiles use modules + install option
+						m.selectedModule = min(len(profile.Modules), m.selectedModule+1)
 					}
 				}
 			} else if m.currentView == "submodule_selection" {
@@ -272,9 +274,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 			} else if m.currentView == "package_selection" {
-				// Get current packages count (including install option)
+				// Get current packages count
 				packages := m.getCurrentPackages()
-				m.selectedPackage = min(len(packages), m.selectedPackage+1)
+				m.selectedPackage = min(len(packages)-1, m.selectedPackage+1)
 			}
 		case "left":
 			// Navigate back (same as escape)
@@ -379,35 +381,54 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Check if module has submodules or direct packages
 				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
 				if exists {
-					var moduleName string
 					if m.profiles[m.selectedProfile] == "newbie" {
 						// For newbie, get use case name
 						useCaseIndex := 0
 						for useCase := range profile.UseCases {
 							if useCaseIndex == m.selectedModule {
-								moduleName = useCase
+								moduleName := useCase
+								module, moduleExists := m.dataLoader.GetModule(moduleName)
+								if moduleExists {
+									// If module has only one submodule called "Packages", skip to package selection
+									if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
+										m.currentView = "package_selection"
+										m.selectedSubmodule = 0
+										m.selectedPackage = 0
+										return m, tea.ClearScreen
+									} else {
+										// Otherwise, go to submodule selection
+										m.currentView = "submodule_selection"
+										m.selectedSubmodule = 0
+										return m, tea.ClearScreen
+									}
+								}
 								break
 							}
 							useCaseIndex++
 						}
 					} else {
-						// For other profiles, get module name
-						moduleName = profile.Modules[m.selectedModule]
-					}
-					
-					module, moduleExists := m.dataLoader.GetModule(moduleName)
-					if moduleExists {
-						// If module has only one submodule called "Packages", skip to package selection
-						if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
-							m.currentView = "package_selection"
-							m.selectedSubmodule = 0
-							m.selectedPackage = 0
-							return m, tea.ClearScreen
+						// For other profiles, check if install option is selected
+						if m.selectedModule == len(profile.Modules) {
+							// User selected the install option
+							return m.installAllSelectedPackages()
 						} else {
-							// Otherwise, go to submodule selection
-							m.currentView = "submodule_selection"
-							m.selectedSubmodule = 0
-							return m, tea.ClearScreen
+							// User selected a module
+							moduleName := profile.Modules[m.selectedModule]
+							module, moduleExists := m.dataLoader.GetModule(moduleName)
+							if moduleExists {
+								// If module has only one submodule called "Packages", skip to package selection
+								if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
+									m.currentView = "package_selection"
+									m.selectedSubmodule = 0
+									m.selectedPackage = 0
+									return m, tea.ClearScreen
+								} else {
+									// Otherwise, go to submodule selection
+									m.currentView = "submodule_selection"
+									m.selectedSubmodule = 0
+									return m, tea.ClearScreen
+								}
+							}
 						}
 					}
 				}
@@ -417,12 +438,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedPackage = 0
 				return m, tea.ClearScreen
 			} else if m.currentView == "package_selection" {
-				// Check if we're at the "Ready to install" option
-				packages := m.getCurrentPackages()
-				if m.selectedPackage >= len(packages) {
-					// User selected the "Ready to install" option
-					return m.installSelectedPackages()
-				}
+				// No special enter handling in package selection
+				// User can only select packages with TAB
 			}
 		case "esc":
 			if m.currentView == "module_selection" {
@@ -561,6 +578,14 @@ func (m model) View() string {
 					}
 					windowContent.WriteString("\n")
 				}
+				
+				// Add global install option
+				windowContent.WriteString("\n")
+				if m.selectedModule == len(profile.Modules) {
+					windowContent.WriteString(selectedStyle.Render("▶ 🚀 Install all selected packages"))
+				} else {
+					windowContent.WriteString(unselectedStyle.Render("  🚀 Install all selected packages"))
+				}
 			}
 		}
 	} else if m.currentView == "submodule_selection" {
@@ -673,13 +698,7 @@ func (m model) View() string {
 						windowContent.WriteString("\n")
 					}
 					
-					// Add install option as a selectable item
-					windowContent.WriteString("\n")
-					if m.selectedPackage == len(packages) {
-						windowContent.WriteString(selectedStyle.Render("▶ 🚀 Install selected packages"))
-					} else {
-						windowContent.WriteString(unselectedStyle.Render("  🚀 Install selected packages"))
-					}
+					// No install option in package selection - it's now global
 				} else {
 					windowContent.WriteString(unselectedStyle.Render("ℹ️ No packages available"))
 				}
@@ -714,7 +733,9 @@ func (m model) View() string {
 	// Simplified controls at the bottom (outside the window)
 	var controls string
 	if m.currentView == "package_selection" {
-		controls = "↑↓ Navigate • ←→ Menu • ⇥ Select • ⏎ Install • ⎋ Back • q Quit"
+		controls = "↑↓ Navigate • ←→ Menu • ⇥ Select • ⎋ Back • q Quit"
+	} else if m.currentView == "module_selection" {
+		controls = "↑↓ Navigate • ←→ Menu • ⏎ Select/Install • ⎋ Back • q Quit"
 	} else if m.currentView == "installation" {
 		controls = "⎋ Back • q Quit"
 	} else {
