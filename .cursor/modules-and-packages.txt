@@ -1,24 +1,25 @@
-# Modules and Packages - Complete List
+# Linux Package Manager - Modules and Packages Guide
+# This file serves as a guide for understanding the module structure
+# MODULES = Top-level categories (what users see in module selection)
+# SUBMODULES = Subcategories within modules (what users see in submodule selection)
+# PACKAGES = Individual packages to install
 
 # =============================================================================
-# MODULE: BROWSERS
+# 🌐 BROWSERS (DIRECT PACKAGES - NO SUBMODULES)
 # =============================================================================
+# This module contains packages directly, no submodules needed
 
-## BROWSERS MODULE
-
-### Main Browsers
 firefox
 chromium
 librewolf
 tor-browser
 
 # =============================================================================
-# MODULE: TERMINALS
+# 💻 TERMINALS (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of terminal tools
 
-## TERMINALS MODULE
-
-### SUBMODULE: Terminal Emulators
+## Terminal Emulators
 alacritty
 kitty
 foot
@@ -29,72 +30,65 @@ terminator
 xterm
 ghostty
 
-### SUBMODULE: Shells
+## Shells
 bash
 zsh
 fish
 
-### SUBMODULE: Shell Enhancements
+## Shell Enhancements
 oh-my-zsh
 bash-completion
 starship
 
-### SUBMODULE: Terminal Multiplexers
+## Terminal Multiplexers
 tmux
 zellij
 
 # =============================================================================
-# MODULE: FILE MANAGERS
+# 📁 FILE MANAGERS (DIRECT PACKAGES - NO SUBMODULES)
 # =============================================================================
+# This module contains packages directly, no submodules needed
 
-## FILE MANAGERS MODULE
-
-### GUI File Managers
 nautilus
 dolphin
 thunar
 
-### CLI File Managers
-TO-DO we will check this module later on, not now
-
 # =============================================================================
-# MODULE: MEDIA PLAYERS
+# 🎵 MEDIA PLAYERS (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of media tools
 
-## MEDIA PLAYERS MODULE
-
-### Video Players
+## Video Players
 vlc
 mpv
 kodi
 celluloid
 
-### Audio Players
+## Audio Players
 clementine
 
 # =============================================================================
-# MODULE: OFFICE AND PRODUCTIVITY
+# 📄 OFFICE AND PRODUCTIVITY (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of productivity tools
 
-## OFFICE AND PRODUCTIVITY MODULE
-
-### Office Suites
+## Office Suites
 libreoffice-fresh
 libreoffice-still
 
-### Document Viewers
+## Document Viewers
 evince
 okular
 xreader
 zathura
 mupdf
 
-### Note Taking
+## Note Taking
 obsidian
 marktext
 xournalpp
 
-### Text Editors
+## Text Editors
 gedit
 kate
 leafpad
@@ -103,30 +97,29 @@ vim
 neovim
 
 # =============================================================================
-# MODULE: GAMING
+# 🎮 GAMING (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of gaming tools
 
-## GAMING MODULE
-
-### Gaming Platforms
+## Gaming Platforms
 steam
 lutris
 heroic-games-launcher
 
-### Wine and Compatibility
+## Wine and Compatibility
 wine
 wine-mono
 wine-gecko
 winetricks
 bottles
 
-### Gaming Utilities
+## Gaming Utilities
 mangohud
 gamemode
 vkbasalt
 goverlay
 
-### Emulators
+## Emulators
 retroarch
 dolphin-emu
 pcsx2
@@ -138,37 +131,36 @@ nestopia
 snes9x
 mame
 
-### External Gaming Projects (Non-Package Installs)
+## External Gaming Projects (Non-Package Installs)
 proton-tkg
 linux-tkg
 arch-gaming-setup
 
 # =============================================================================
-# MODULE: COMMUNICATION
+# 💬 COMMUNICATION (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of communication tools
 
-## COMMUNICATION MODULE
-
-### Messaging Apps
+## Messaging Apps
 discord
 telegram-desktop
 signal-desktop
 whatsapp-for-linux
 skype
 
-### Email Clients
+## Email Clients
 thunderbird
 geary
 alpine
 mutt
 neomutt
 
-### Video Conferencing
+## Video Conferencing
 zoom
 teams
 meet
 
-### IRC and Chat
+## IRC and Chat
 hexchat
 weechat
 irssi
@@ -176,12 +168,11 @@ pidgin
 gajim
 
 # =============================================================================
-# MODULE: GRAPHICS AND DESIGN
+# 🎨 GRAPHICS AND DESIGN (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of graphics and design tools
 
-## GRAPHICS AND DESIGN MODULE
-
-### Image Editors
+## Image Editors
 gimp
 krita
 inkscape
@@ -191,39 +182,38 @@ digikam
 shotwell
 feh
 
-### Vector Graphics
+## Vector Graphics
 libreoffice-draw
 scribus
 
-### 3D Modeling
+## 3D Modeling
 blender
 freecad
 openscad
 meshlab
 
-### Design Tools
+## Design Tools
 figma-linux
 canva
 adobe-creative-cloud
 
-### Image Viewers
+## Image Viewers
 gwenview
 ristretto
 eog
 
 # =============================================================================
-# MODULE: DEVELOPMENT TOOLS
+# ⚙️ DEVELOPMENT TOOLS (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of development tools
 
-## DEVELOPMENT TOOLS MODULE
-
-### SUBMODULE: IDEs and Editors
+## IDEs and Editors
 code
 vscodium
 netbeans
 android-studio
 
-### SUBMODULE: Programming Languages
+## Programming Languages
 python
 nodejs
 jdk-openjdk
@@ -232,7 +222,7 @@ rust
 php
 ruby
 
-### SUBMODULE: Build Tools and Compilers
+## Build Tools and Compilers
 gcc
 clang
 make
@@ -246,11 +236,11 @@ npm
 yarn
 pip
 
-### SUBMODULE: Version Control
+## Version Control
 git
 github-cli
 
-### SUBMODULE: Databases
+## Databases
 mysql
 postgresql
 sqlite
@@ -258,7 +248,7 @@ mongodb
 redis
 dbeaver
 
-### SUBMODULE: Container and DevOps
+## Container and DevOps
 docker
 docker-compose
 kubernetes
@@ -266,12 +256,11 @@ terraform
 ansible
 
 # =============================================================================
-# MODULE: UTILITIES
+# 🔧 UTILITIES (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of utility tools
 
-## UTILITIES MODULE
-
-### Command Replacements
+## Command Replacements
 lsd
 exa
 bat
@@ -285,13 +274,13 @@ procs
 tree
 fzf
 
-### System Utilities
+## System Utilities
 fastfetch
 nethogs
 rsync
 timeshift
 
-### Archive and Compression
+## Archive and Compression
 unzip
 p7zip
 tar
@@ -301,12 +290,11 @@ xz
 zstd
 
 # =============================================================================
-# MODULE: CYBERSECURITY
+# 🔒 CYBERSECURITY (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of cybersecurity tools
 
-## CYBERSECURITY MODULE
-
-### Network Security and Reconnaissance
+## Network Security and Reconnaissance
 nmap
 masscan
 zmap
@@ -323,7 +311,7 @@ dirbuster
 wfuzz
 ffuf
 
-### Vulnerability Assessment
+## Vulnerability Assessment
 nessus
 openvas
 nikto
@@ -337,7 +325,7 @@ wapiti
 whatweb
 wafw00f
 
-### Web Application Security
+## Web Application Security
 burpsuite
 owasp-zap
 commix
@@ -346,7 +334,7 @@ xsstrike
 dalfox
 param-miner
 
-### Password Attacks
+## Password Attacks
 john
 hashcat
 hydra
@@ -359,7 +347,7 @@ rsmangler
 hash-identifier
 hashid
 
-### Wireless Security
+## Wireless Security
 aircrack-ng
 reaver
 bully
@@ -371,7 +359,7 @@ tcpdump
 bettercap
 fluxion
 
-### Social Engineering
+## Social Engineering
 setoolkit
 phishery
 gophish
@@ -379,7 +367,7 @@ king-phisher
 beef-xss
 social-engineer-toolkit
 
-### Malware Analysis
+## Malware Analysis
 yara
 clamav
 cuckoo
@@ -396,7 +384,7 @@ file
 binwalk
 upx
 
-### Forensics
+## Forensics
 autopsy
 sleuthkit
 bulk-extractor
@@ -411,7 +399,7 @@ rekall
 plaso
 log2timeline
 
-### Exploitation Frameworks
+## Exploitation Frameworks
 metasploit
 armitage
 cobalt-strike
@@ -423,7 +411,7 @@ thefatrat
 msfvenom
 payloadsallthethings
 
-### Network Monitoring and Analysis
+## Network Monitoring and Analysis
 netstat
 ss
 iftop
@@ -435,7 +423,7 @@ fierce
 dnsmap
 dnswalk
 
-### Cryptography and Steganography
+## Cryptography and Steganography
 steghide
 outguess
 stegsolve
@@ -448,7 +436,7 @@ socat
 netcat
 nc
 
-### OSINT and Information Gathering
+## OSINT and Information Gathering
 maltego
 spiderfoot
 shodan
@@ -462,63 +450,62 @@ urlvoid
 ipvoid
 
 # =============================================================================
-# MODULE: PRIVACY
+# 🛡️ PRIVACY (HAS SUBMODULES)
 # =============================================================================
+# This module has submodules for different types of privacy tools
 
-## PRIVACY MODULE
-
-### VPN and Proxy Tools
+## VPN and Proxy Tools
 mullvad-vpn
 protonvpn
 ivpn
 tor
 proxychains
 
-### DNS and Network Privacy
+## DNS and Network Privacy
 nextdns
 adguard-dns
 cloudflare-dns
 dnscrypt-proxy
 unbound
 
-### Email Privacy
+## Email Privacy
 protonmail
 tutanota
 enigmail
 mailvelope
 
-### Messaging Privacy
+## Messaging Privacy
 session
 threema
 element-desktop
 jitsi-meet
 
-### File Encryption and Storage
+## File Encryption and Storage
 veracrypt
 cryptomator
 age
 
-### Password Management
+## Password Management
 bitwarden
 keepassxc
 pass
 1password
 lastpass
 
-### Metadata Protection
+## Metadata Protection
 mat2
 exiftool
 pdf-redact-tools
 metadata-cleaner
 
-### Privacy Utilities
+## Privacy Utilities
 ublock-origin
 privacy-badger
 https-everywhere
 decentraleyes
 clearurls
 
-### System Privacy
+## System Privacy
 firejail
 bubblewrap
 apparmor

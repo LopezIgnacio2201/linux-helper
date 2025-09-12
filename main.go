@@ -76,10 +76,14 @@ type model struct {
 	profiles   []string
 	
 	// Navigation state
-	currentView string // "profile_selection", "module_selection", "submodule_selection"
+	currentView string // "profile_selection", "module_selection", "submodule_selection", "package_selection"
 	selectedProfile int
 	selectedModule int
 	selectedSubmodule int
+	selectedPackage int
+	
+	// Package selection state
+	selectedPackages map[string]bool // Track which packages are selected
 }
 
 func initialModel() model {
@@ -102,11 +106,44 @@ func initialModel() model {
 		selectedProfile: 0,
 		selectedModule: 0,
 		selectedSubmodule: 0,
+		selectedPackage: 0,
+		selectedPackages: make(map[string]bool),
 	}
 }
 
 func (m model) Init() tea.Cmd {
 	return tea.ClearScreen
+}
+
+// getCurrentPackages returns the packages for the currently selected submodule
+func (m model) getCurrentPackages() []data.Package {
+	profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+	if !exists {
+		return []data.Package{}
+	}
+	
+	var moduleName string
+	if m.profiles[m.selectedProfile] == "newbie" {
+		// For newbie, get use case name
+		useCaseIndex := 0
+		for useCase := range profile.UseCases {
+			if useCaseIndex == m.selectedModule {
+				moduleName = useCase
+				break
+			}
+			useCaseIndex++
+		}
+	} else {
+		// For other profiles, get module name
+		moduleName = profile.Modules[m.selectedModule]
+	}
+	
+	module, moduleExists := m.dataLoader.GetModule(moduleName)
+	if !moduleExists || m.selectedSubmodule >= len(module.Submodules) {
+		return []data.Package{}
+	}
+	
+	return module.Submodules[m.selectedSubmodule].Packages
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -122,6 +159,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedModule = max(0, m.selectedModule-1)
 			} else if m.currentView == "submodule_selection" {
 				m.selectedSubmodule = max(0, m.selectedSubmodule-1)
+			} else if m.currentView == "package_selection" {
+				m.selectedPackage = max(0, m.selectedPackage-1)
 			}
 		case "down":
 			if m.currentView == "profile_selection" {
@@ -162,6 +201,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.selectedSubmodule = min(len(module.Submodules)-1, m.selectedSubmodule+1)
 					}
 				}
+			} else if m.currentView == "package_selection" {
+				// Get current packages count
+				packages := m.getCurrentPackages()
+				m.selectedPackage = min(len(packages)-1, m.selectedPackage+1)
 			}
 		case "left":
 			// Navigate back (same as escape)
@@ -173,6 +216,39 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Go back to module selection
 				m.currentView = "module_selection"
 				return m, tea.ClearScreen
+			} else if m.currentView == "package_selection" {
+				// Check if we came from a module with direct packages or submodules
+				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+				if exists {
+					var moduleName string
+					if m.profiles[m.selectedProfile] == "newbie" {
+						// For newbie, get use case name
+						useCaseIndex := 0
+						for useCase := range profile.UseCases {
+							if useCaseIndex == m.selectedModule {
+								moduleName = useCase
+								break
+							}
+							useCaseIndex++
+						}
+					} else {
+						// For other profiles, get module name
+						moduleName = profile.Modules[m.selectedModule]
+					}
+					
+					module, moduleExists := m.dataLoader.GetModule(moduleName)
+					if moduleExists {
+						// If module has only one submodule called "Packages", go back to module selection
+						if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
+							m.currentView = "module_selection"
+							return m, tea.ClearScreen
+						} else {
+							// Otherwise, go back to submodule selection
+							m.currentView = "submodule_selection"
+							return m, tea.ClearScreen
+						}
+					}
+				}
 			}
 		case "right":
 			// Navigate forward (same as enter)
@@ -182,9 +258,45 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedModule = 0
 				return m, tea.ClearScreen
 			} else if m.currentView == "module_selection" {
-				// Move to submodule selection for selected module
-				m.currentView = "submodule_selection"
-				m.selectedSubmodule = 0
+				// Check if module has submodules or direct packages
+				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+				if exists {
+					var moduleName string
+					if m.profiles[m.selectedProfile] == "newbie" {
+						// For newbie, get use case name
+						useCaseIndex := 0
+						for useCase := range profile.UseCases {
+							if useCaseIndex == m.selectedModule {
+								moduleName = useCase
+								break
+							}
+							useCaseIndex++
+						}
+					} else {
+						// For other profiles, get module name
+						moduleName = profile.Modules[m.selectedModule]
+					}
+					
+					module, moduleExists := m.dataLoader.GetModule(moduleName)
+					if moduleExists {
+						// If module has only one submodule called "Packages", skip to package selection
+						if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
+							m.currentView = "package_selection"
+							m.selectedSubmodule = 0
+							m.selectedPackage = 0
+							return m, tea.ClearScreen
+						} else {
+							// Otherwise, go to submodule selection
+							m.currentView = "submodule_selection"
+							m.selectedSubmodule = 0
+							return m, tea.ClearScreen
+						}
+					}
+				}
+			} else if m.currentView == "submodule_selection" {
+				// Move to package selection for selected submodule
+				m.currentView = "package_selection"
+				m.selectedPackage = 0
 				return m, tea.ClearScreen
 			}
 		case "enter":
@@ -194,9 +306,45 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedModule = 0
 				return m, tea.ClearScreen
 			} else if m.currentView == "module_selection" {
-				// Move to submodule selection for selected module
-				m.currentView = "submodule_selection"
-				m.selectedSubmodule = 0
+				// Check if module has submodules or direct packages
+				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+				if exists {
+					var moduleName string
+					if m.profiles[m.selectedProfile] == "newbie" {
+						// For newbie, get use case name
+						useCaseIndex := 0
+						for useCase := range profile.UseCases {
+							if useCaseIndex == m.selectedModule {
+								moduleName = useCase
+								break
+							}
+							useCaseIndex++
+						}
+					} else {
+						// For other profiles, get module name
+						moduleName = profile.Modules[m.selectedModule]
+					}
+					
+					module, moduleExists := m.dataLoader.GetModule(moduleName)
+					if moduleExists {
+						// If module has only one submodule called "Packages", skip to package selection
+						if len(module.Submodules) == 1 && module.Submodules[0].Name == "Packages" {
+							m.currentView = "package_selection"
+							m.selectedSubmodule = 0
+							m.selectedPackage = 0
+							return m, tea.ClearScreen
+						} else {
+							// Otherwise, go to submodule selection
+							m.currentView = "submodule_selection"
+							m.selectedSubmodule = 0
+							return m, tea.ClearScreen
+						}
+					}
+				}
+			} else if m.currentView == "submodule_selection" {
+				// Move to package selection for selected submodule
+				m.currentView = "package_selection"
+				m.selectedPackage = 0
 				return m, tea.ClearScreen
 			}
 		case "esc":
@@ -208,6 +356,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Go back to module selection
 				m.currentView = "module_selection"
 				return m, tea.ClearScreen
+			} else if m.currentView == "package_selection" {
+				// Go back to submodule selection
+				m.currentView = "submodule_selection"
+				return m, tea.ClearScreen
+			}
+		case "tab":
+			// Toggle package selection
+			if m.currentView == "package_selection" {
+				packages := m.getCurrentPackages()
+				if m.selectedPackage < len(packages) {
+					packageName := packages[m.selectedPackage].Name
+					m.selectedPackages[packageName] = !m.selectedPackages[packageName]
+				}
 			}
 		}
 	}
@@ -378,6 +539,67 @@ func (m model) View() string {
 				windowContent.WriteString(unselectedStyle.Render("ℹ️ No submodules available"))
 			}
 		}
+	} else if m.currentView == "package_selection" {
+		// Package selection inside window
+		selectedProfileName := m.profiles[m.selectedProfile]
+		windowContent.WriteString(headerStyle.Render(fmt.Sprintf("Profile: %s", selectedProfileName)))
+		windowContent.WriteString("\n\n")
+		
+		// Get current module and submodule names
+		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
+		if exists {
+			var moduleName string
+			if selectedProfileName == "newbie" {
+				// For newbie, get use case name
+				useCaseIndex := 0
+				for useCase := range profile.UseCases {
+					if useCaseIndex == m.selectedModule {
+						moduleName = useCase
+						break
+					}
+					useCaseIndex++
+				}
+			} else {
+				// For other profiles, get module name
+				moduleName = profile.Modules[m.selectedModule]
+			}
+			
+			module, moduleExists := m.dataLoader.GetModule(moduleName)
+			if moduleExists && m.selectedSubmodule < len(module.Submodules) {
+				submoduleName := module.Submodules[m.selectedSubmodule].Name
+				windowContent.WriteString(headerStyle.Render(fmt.Sprintf("📦 %s → %s", moduleName, submoduleName)))
+				windowContent.WriteString("\n\n")
+				
+				// Get packages
+				packages := module.Submodules[m.selectedSubmodule].Packages
+				if len(packages) > 0 {
+					windowContent.WriteString(headerStyle.Render("📋 Available packages"))
+					windowContent.WriteString("\n\n")
+					
+					for i, pkg := range packages {
+						// Check if package is selected
+						isSelected := m.selectedPackages[pkg.Name]
+						selectionIcon := "☐"
+						if isSelected {
+							selectionIcon = "✓"
+						}
+						
+						if i == m.selectedPackage {
+							windowContent.WriteString(selectedStyle.Render(fmt.Sprintf("▶ %s %s", selectionIcon, pkg.Name)))
+						} else {
+							windowContent.WriteString(unselectedStyle.Render(fmt.Sprintf("  %s %s", selectionIcon, pkg.Name)))
+						}
+						windowContent.WriteString("\n")
+					}
+					
+					// Add confirm option at the bottom
+					windowContent.WriteString("\n")
+					windowContent.WriteString(headerStyle.Render("🚀 Ready to install selected packages"))
+				} else {
+					windowContent.WriteString(unselectedStyle.Render("ℹ️ No packages available"))
+				}
+			}
+		}
 	}
 	
 	// Apply window border to content
@@ -385,7 +607,12 @@ func (m model) View() string {
 	content.WriteString("\n")
 	
 	// Simplified controls at the bottom (outside the window)
-	controls := "↑↓ Navigate • ←→ Menu • ⏎ Select • ⎋ Back • q Quit"
+	var controls string
+	if m.currentView == "package_selection" {
+		controls = "↑↓ Navigate • ←→ Menu • ⇥ Select • ⏎ Install • ⎋ Back • q Quit"
+	} else {
+		controls = "↑↓ Navigate • ←→ Menu • ⏎ Select • ⎋ Back • q Quit"
+	}
 	content.WriteString(controlsStyle.Render(controls))
 	
 	return content.String()

@@ -63,9 +63,24 @@ func (dl *DataLoader) LoadAllData() error {
 	return nil
 }
 
-// loadModules loads the modules-and-packages.txt file
+// loadModules loads the modules.txt and packages.txt files
 func (dl *DataLoader) loadModules() error {
-	filePath := "resources/modules/modules-and-packages.txt"
+	// Load modules structure
+	if err := dl.loadModulesStructure(); err != nil {
+		return fmt.Errorf("failed to load modules structure: %w", err)
+	}
+
+	// Load packages
+	if err := dl.loadPackages(); err != nil {
+		return fmt.Errorf("failed to load packages: %w", err)
+	}
+
+	return nil
+}
+
+// loadModulesStructure loads the modules.txt file
+func (dl *DataLoader) loadModulesStructure() error {
+	filePath := "resources/modules.txt"
 	file, err := os.Open(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to open modules file: %w", err)
@@ -73,142 +88,119 @@ func (dl *DataLoader) loadModules() error {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	var currentModule Module
-	var currentSubmodule Submodule
-	var inModule, inSubmodule bool
-
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		
-		// Skip empty lines
-		if line == "" {
+		// Skip empty lines and comments
+		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
-		// Skip comment lines that are not headers
-		if strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "## ") && !strings.HasPrefix(line, "### ") {
+		// Parse format: MODULE_NAME:DIRECT_PACKAGES or MODULE_NAME:SUBMODULES
+		parts := strings.Split(line, ":")
+		if len(parts) != 2 {
 			continue
 		}
 
-		// Check for module header (## MODULE: NAME format)
-		if strings.HasPrefix(line, "## ") && strings.Contains(line, "MODULE:") {
-			// Save previous module if exists
-			if inModule {
-				dl.Modules[currentModule.Name] = currentModule
-			}
-			
-			// Start new module
-			moduleName := strings.TrimSpace(strings.TrimPrefix(line, "## "))
-			moduleName = strings.TrimSpace(strings.TrimPrefix(moduleName, "MODULE:"))
-			currentModule = Module{Name: moduleName, Submodules: []Submodule{}}
-			inModule = true
-			inSubmodule = false
-			continue
+		moduleName := strings.TrimSpace(parts[0])
+		moduleType := strings.TrimSpace(parts[1])
+
+		// Initialize module
+		module := Module{
+			Name:       moduleName,
+			Submodules: []Submodule{},
 		}
 
-		// Check for module header (## NAME MODULE format)
-		if strings.HasPrefix(line, "## ") && strings.HasSuffix(line, " MODULE") {
-			// Save previous module if exists
-			if inModule {
-				dl.Modules[currentModule.Name] = currentModule
-			}
-			
-			// Start new module
-			moduleName := strings.TrimSpace(strings.TrimSuffix(line, " MODULE"))
-			moduleName = strings.TrimSpace(strings.TrimPrefix(moduleName, "## "))
-			currentModule = Module{Name: moduleName, Submodules: []Submodule{}}
-			inModule = true
-			inSubmodule = false
-			continue
+		// If it's a direct packages module, create a "Packages" submodule
+		if moduleType == "DIRECT_PACKAGES" {
+			module.Submodules = append(module.Submodules, Submodule{
+				Name:     "Packages",
+				Packages: []Package{},
+			})
 		}
 
-		// Check for submodule header (### SUBMODULE: NAME format)
-		if strings.HasPrefix(line, "### SUBMODULE:") {
-			// Save previous submodule if exists
-			if inSubmodule {
-				currentModule.Submodules = append(currentModule.Submodules, currentSubmodule)
-			}
-			
-			// Start new submodule
-			submoduleName := strings.TrimSpace(strings.TrimPrefix(line, "### SUBMODULE:"))
-			currentSubmodule = Submodule{Name: submoduleName, Packages: []Package{}}
-			inSubmodule = true
-			continue
-		}
-
-		// Check for submodule header (### NAME format)
-		if strings.HasPrefix(line, "### ") && !strings.Contains(line, "SUBMODULE:") {
-			// Save previous submodule if exists
-			if inSubmodule {
-				currentModule.Submodules = append(currentModule.Submodules, currentSubmodule)
-			}
-			
-			// Start new submodule
-			submoduleName := strings.TrimSpace(strings.TrimPrefix(line, "### "))
-			currentSubmodule = Submodule{Name: submoduleName, Packages: []Package{}}
-			inSubmodule = true
-			continue
-		}
-
-		// Check for package (non-header line in submodule)
-		if inSubmodule && !strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "=") {
-			packageName := strings.TrimSpace(line)
-			if packageName != "" {
-				currentSubmodule.Packages = append(currentSubmodule.Packages, Package{Name: packageName})
-			}
-		}
-	}
-
-	// Save last module and submodule
-	if inSubmodule {
-		currentModule.Submodules = append(currentModule.Submodules, currentSubmodule)
-	}
-	if inModule {
-		dl.Modules[currentModule.Name] = currentModule
+		dl.Modules[moduleName] = module
 	}
 
 	return scanner.Err()
 }
 
-// loadProfiles loads the profile files
+// loadPackages loads the packages.txt file
+func (dl *DataLoader) loadPackages() error {
+	filePath := "resources/packages.txt"
+	file, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to open packages file: %w", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		
+		// Skip empty lines and comments
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// Parse format: MODULE_NAME:SUBMODULE_NAME:PACKAGE_NAME
+		parts := strings.Split(line, ":")
+		if len(parts) != 3 {
+			continue
+		}
+
+		moduleName := strings.TrimSpace(parts[0])
+		submoduleName := strings.TrimSpace(parts[1])
+		packageName := strings.TrimSpace(parts[2])
+
+		// Find or create the submodule
+		module, exists := dl.Modules[moduleName]
+		if !exists {
+			continue
+		}
+
+		// Find the submodule
+		submoduleIndex := -1
+		for i, submodule := range module.Submodules {
+			if submodule.Name == submoduleName {
+				submoduleIndex = i
+				break
+			}
+		}
+
+		// If submodule doesn't exist, create it
+		if submoduleIndex == -1 {
+			module.Submodules = append(module.Submodules, Submodule{
+				Name:     submoduleName,
+				Packages: []Package{},
+			})
+			submoduleIndex = len(module.Submodules) - 1
+		}
+
+		// Add package to submodule
+		module.Submodules[submoduleIndex].Packages = append(module.Submodules[submoduleIndex].Packages, Package{
+			Name: packageName,
+		})
+
+		// Update the module
+		dl.Modules[moduleName] = module
+	}
+
+	return scanner.Err()
+}
+
+// loadProfiles loads the profiles.txt file
 func (dl *DataLoader) loadProfiles() error {
-	// Load newbie profile
-	if err := dl.loadNewbieProfile(); err != nil {
-		return fmt.Errorf("failed to load newbie profile: %w", err)
-	}
-
-	// Load common user profile
-	if err := dl.loadCommonUserProfile(); err != nil {
-		return fmt.Errorf("failed to load common user profile: %w", err)
-	}
-
-	// Load power user profile
-	if err := dl.loadPowerUserProfile(); err != nil {
-		return fmt.Errorf("failed to load power user profile: %w", err)
-	}
-
-	return nil
-}
-
-// loadNewbieProfile loads the newbie profile
-func (dl *DataLoader) loadNewbieProfile() error {
-	filePath := "resources/packages/package-lists-newbie.txt"
+	filePath := "resources/profiles.txt"
 	file, err := os.Open(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to open newbie profile: %w", err)
+		return fmt.Errorf("failed to open profiles file: %w", err)
 	}
 	defer file.Close()
 
-	profile := Profile{
-		Name:         "newbie",
-		CorePackages: []string{},
-		UseCases:     make(map[string][]string),
-		Modules:      []string{},
-	}
-
 	scanner := bufio.NewScanner(file)
-	var currentSection string
-	var inCorePackages, inUseCases bool
+	var currentProfile string
+	var currentModules []string
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -218,115 +210,43 @@ func (dl *DataLoader) loadNewbieProfile() error {
 			continue
 		}
 
-		// Check for core packages section
-		if strings.Contains(line, "CORE PACKAGES") {
-			inCorePackages = true
-			inUseCases = false
-			currentSection = ""
+		// Parse format: PROFILE_NAME:MODULE_NAME
+		parts := strings.Split(line, ":")
+		if len(parts) != 2 {
 			continue
 		}
 
-		// Check for use cases section
-		if strings.Contains(line, "USE CASE SPECIFIC PACKAGES") {
-			inCorePackages = false
-			inUseCases = true
-			currentSection = ""
-			continue
-		}
+		profileName := strings.TrimSpace(parts[0])
+		moduleName := strings.TrimSpace(parts[1])
 
-		// Check for use case header
-		if inUseCases && strings.HasPrefix(line, "## ") && strings.Contains(line, "USE CASE") {
-			currentSection = strings.TrimSpace(strings.TrimPrefix(line, "## "))
-			currentSection = strings.TrimSpace(strings.TrimPrefix(currentSection, "USE CASE"))
-			profile.UseCases[currentSection] = []string{}
-			continue
-		}
-
-		// Add packages to current section
-		if !strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "=") && line != "" {
-			if inCorePackages {
-				profile.CorePackages = append(profile.CorePackages, line)
-			} else if inUseCases && currentSection != "" {
-				profile.UseCases[currentSection] = append(profile.UseCases[currentSection], line)
+		// If this is a new profile, save the previous one
+		if currentProfile != "" && currentProfile != profileName {
+			dl.Profiles[currentProfile] = Profile{
+				Name:        currentProfile,
+				CorePackages: []string{},
+				UseCases:    make(map[string][]string),
+				Modules:     currentModules,
 			}
+			currentModules = []string{}
+		}
+
+		currentProfile = profileName
+		currentModules = append(currentModules, moduleName)
+	}
+
+	// Save the last profile
+	if currentProfile != "" {
+		dl.Profiles[currentProfile] = Profile{
+			Name:        currentProfile,
+			CorePackages: []string{},
+			UseCases:    make(map[string][]string),
+			Modules:     currentModules,
 		}
 	}
 
-	dl.Profiles["newbie"] = profile
 	return scanner.Err()
 }
 
-// loadCommonUserProfile loads the common user profile
-func (dl *DataLoader) loadCommonUserProfile() error {
-	filePath := "resources/packages/common-user-menu.txt"
-	file, err := os.Open(filePath)
-	if err != nil {
-		return fmt.Errorf("failed to open common user profile: %w", err)
-	}
-	defer file.Close()
-
-	profile := Profile{
-		Name:        "common",
-		CorePackages: []string{},
-		UseCases:    make(map[string][]string),
-		Modules:     []string{},
-	}
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		
-		// Skip empty lines and comments
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-
-		// Extract module names (lines starting with "- ")
-		if strings.HasPrefix(line, "- ") && !strings.Contains(line, "-->") {
-			moduleName := strings.TrimSpace(strings.TrimPrefix(line, "- "))
-			profile.Modules = append(profile.Modules, moduleName)
-		}
-	}
-
-	dl.Profiles["common"] = profile
-	return scanner.Err()
-}
-
-// loadPowerUserProfile loads the power user profile
-func (dl *DataLoader) loadPowerUserProfile() error {
-	filePath := "resources/packages/poweruser-menu.txt"
-	file, err := os.Open(filePath)
-	if err != nil {
-		return fmt.Errorf("failed to open power user profile: %w", err)
-	}
-	defer file.Close()
-
-	profile := Profile{
-		Name:        "poweruser",
-		CorePackages: []string{},
-		UseCases:    make(map[string][]string),
-		Modules:     []string{},
-	}
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		
-		// Skip empty lines and comments
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-
-		// Extract module names (lines starting with "- ")
-		if strings.HasPrefix(line, "- ") && !strings.Contains(line, "-->") {
-			moduleName := strings.TrimSpace(strings.TrimPrefix(line, "- "))
-			profile.Modules = append(profile.Modules, moduleName)
-		}
-	}
-
-	dl.Profiles["poweruser"] = profile
-	return scanner.Err()
-}
 
 // GetModule returns a module by name
 func (dl *DataLoader) GetModule(name string) (Module, bool) {

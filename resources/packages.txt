@@ -1,0 +1,64 @@
+# Packages data file - used by the script
+# Format: MODULE_NAME:SUBMODULE_NAME:PACKAGE_NAME
+
+# Browsers (direct packages)
+Browsers:Packages:firefox
+Browsers:Packages:chromium
+Browsers:Packages:librewolf
+Browsers:Packages:tor-browser
+
+# File Managers (direct packages)
+File Managers:Packages:nautilus
+File Managers:Packages:dolphin
+File Managers:Packages:thunar
+
+# Terminals (submodules)
+Terminals:Terminal Emulators:alacritty
+Terminals:Terminal Emulators:kitty
+Terminals:Terminal Emulators:foot
+Terminals:Terminal Emulators:konsole
+Terminals:Terminal Emulators:gnome-terminal
+Terminals:Terminal Emulators:xfce4-terminal
+Terminals:Terminal Emulators:terminator
+Terminals:Terminal Emulators:xterm
+Terminals:Terminal Emulators:ghostty
+
+Terminals:Shells:bash
+Terminals:Shells:zsh
+Terminals:Shells:fish
+
+Terminals:Shell Enhancements:oh-my-zsh
+Terminals:Shell Enhancements:bash-completion
+Terminals:Shell Enhancements:starship
+
+Terminals:Terminal Multiplexers:tmux
+Terminals:Terminal Multiplexers:zellij
+
+# Media Players (submodules)
+Media Players:Video Players:vlc
+Media Players:Video Players:mpv
+Media Players:Video Players:kodi
+Media Players:Video Players:celluloid
+
+Media Players:Audio Players:clementine
+
+# Office and Productivity (submodules)
+Office and Productivity:Office Suites:libreoffice-fresh
+Office and Productivity:Office Suites:libreoffice-still
+
+Office and Productivity:Document Viewers:evince
+Office and Productivity:Document Viewers:okular
+Office and Productivity:Document Viewers:xreader
+Office and Productivity:Document Viewers:zathura
+Office and Productivity:Document Viewers:mupdf
+
+Office and Productivity:Note Taking:obsidian
+Office and Productivity:Note Taking:marktext
+Office and Productivity:Note Taking:xournalpp
+
+Office and Productivity:Text Editors:gedit
+Office and Productivity:Text Editors:kate
+Office and Productivity:Text Editors:leafpad
+Office and Productivity:Text Editors:nano
+Office and Productivity:Text Editors:vim
+Office and Productivity:Text Editors:neovim

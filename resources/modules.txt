@@ -1,0 +1,15 @@
+# Modules data file - used by the script
+# Format: MODULE_NAME:DIRECT_PACKAGES or MODULE_NAME:SUBMODULES
+
+Browsers:DIRECT_PACKAGES
+Terminals:SUBMODULES
+File Managers:DIRECT_PACKAGES
+Media Players:SUBMODULES
+Office and Productivity:SUBMODULES
+Gaming:SUBMODULES
+Communication:SUBMODULES
+Graphics and Design:SUBMODULES
+Development Tools:SUBMODULES
+Utilities:SUBMODULES
+Cybersecurity:SUBMODULES
+Privacy:SUBMODULES

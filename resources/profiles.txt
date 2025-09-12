@@ -1,0 +1,35 @@
+# Profiles data file - used by the script
+# Format: PROFILE_NAME:MODULE_NAME
+
+# Newbie profile (use cases)
+newbie:Gaming
+newbie:Basic Development
+newbie:Daily Use
+newbie:Media Editing
+newbie:Cybersecurity Basics
+
+# Common user profile
+common:Browsers
+common:Terminals
+common:File Managers
+common:Media Players
+common:Office and Productivity
+common:Gaming
+common:Communication
+common:Graphics and Design
+common:Development Tools
+common:Utilities
+
+# Power user profile (all modules)
+poweruser:Browsers
+poweruser:Terminals
+poweruser:File Managers
+poweruser:Media Players
+poweruser:Office and Productivity
+poweruser:Gaming
+poweruser:Communication
+poweruser:Graphics and Design
+poweruser:Development Tools
+poweruser:Utilities
+poweruser:Cybersecurity
+poweruser:Privacy
