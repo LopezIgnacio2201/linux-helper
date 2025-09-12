@@ -9,11 +9,32 @@ import (
 	"linux-package-manager/internal/data"
 )
 
+// Helper functions
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 type model struct {
 	message    string
 	dataLoader *data.DataLoader
 	modules    []string
 	profiles   []string
+	
+	// Navigation state
+	currentView string // "profile_selection", "module_selection", "submodule_selection"
+	selectedProfile int
+	selectedModule int
+	selectedSubmodule int
 }
 
 func initialModel() model {
@@ -32,6 +53,10 @@ func initialModel() model {
 		dataLoader: loader,
 		modules:    loader.ListModules(),
 		profiles:   loader.ListProfiles(),
+		currentView: "profile_selection",
+		selectedProfile: 0,
+		selectedModule: 0,
+		selectedSubmodule: 0,
 	}
 }
 
@@ -45,7 +70,42 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		// TODO: Add navigation logic here
+		case "up":
+			if m.currentView == "profile_selection" {
+				m.selectedProfile = max(0, m.selectedProfile-1)
+			} else if m.currentView == "module_selection" {
+				m.selectedModule = max(0, m.selectedModule-1)
+			}
+		case "down":
+			if m.currentView == "profile_selection" {
+				m.selectedProfile = min(len(m.profiles)-1, m.selectedProfile+1)
+			} else if m.currentView == "module_selection" {
+				profile, exists := m.dataLoader.GetProfile(m.profiles[m.selectedProfile])
+				if exists {
+					if m.profiles[m.selectedProfile] == "newbie" {
+						// Newbie profile uses use cases
+						m.selectedModule = min(len(profile.UseCases)-1, m.selectedModule+1)
+					} else {
+						// Other profiles use modules
+						m.selectedModule = min(len(profile.Modules)-1, m.selectedModule+1)
+					}
+				}
+			}
+		case "enter":
+			if m.currentView == "profile_selection" {
+				// Move to module selection for selected profile
+				m.currentView = "module_selection"
+				m.selectedModule = 0
+			} else if m.currentView == "module_selection" {
+				// Move to submodule selection for selected module
+				m.currentView = "submodule_selection"
+				m.selectedSubmodule = 0
+			}
+		case "esc":
+			if m.currentView == "module_selection" {
+				// Go back to profile selection
+				m.currentView = "profile_selection"
+			}
 		}
 	}
 	return m, nil
@@ -56,11 +116,50 @@ func (m model) View() string {
 	
 	content.WriteString(fmt.Sprintf("%s\n\n", m.message))
 	
-	// Show profiles for selection
-	if len(m.profiles) > 0 {
-		content.WriteString("Select a profile:\n")
-		for _, profile := range m.profiles {
-			content.WriteString(fmt.Sprintf("- %s\n", profile))
+	if m.currentView == "profile_selection" {
+		// Show profiles for selection
+		if len(m.profiles) > 0 {
+			content.WriteString("Select a profile:\n")
+			for i, profile := range m.profiles {
+				if i == m.selectedProfile {
+					content.WriteString(fmt.Sprintf("> %s <\n", profile))
+				} else {
+					content.WriteString(fmt.Sprintf("  %s\n", profile))
+				}
+			}
+			content.WriteString("\n")
+		}
+	} else if m.currentView == "module_selection" {
+		// Show modules for selected profile
+		selectedProfileName := m.profiles[m.selectedProfile]
+		content.WriteString(fmt.Sprintf("Profile: %s\n\n", selectedProfileName))
+		
+		// Get available modules for this profile
+		profile, exists := m.dataLoader.GetProfile(selectedProfileName)
+		if exists {
+			if selectedProfileName == "newbie" {
+				// Newbie profile shows use cases instead of modules
+				content.WriteString("Select a use case:\n")
+				useCaseIndex := 0
+				for useCase := range profile.UseCases {
+					if useCaseIndex == m.selectedModule {
+						content.WriteString(fmt.Sprintf("> %s <\n", useCase))
+					} else {
+						content.WriteString(fmt.Sprintf("  %s\n", useCase))
+					}
+					useCaseIndex++
+				}
+			} else {
+				// Other profiles show modules
+				content.WriteString("Available modules:\n")
+				for i, moduleName := range profile.Modules {
+					if i == m.selectedModule {
+						content.WriteString(fmt.Sprintf("> %s <\n", moduleName))
+					} else {
+						content.WriteString(fmt.Sprintf("  %s\n", moduleName))
+					}
+				}
+			}
 		}
 		content.WriteString("\n")
 	}
