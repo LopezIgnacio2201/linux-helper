@@ -2,7 +2,6 @@ package packages
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -26,13 +25,13 @@ func (pm *PackageManager) detectAURHelper() {
 		pm.aurHelper = "paru"
 		return
 	}
-	
+
 	// Check for yay as fallback
 	if pm.isCommandAvailable("yay") {
 		pm.aurHelper = "yay"
 		return
 	}
-	
+
 	// If neither is available, we'll install paru
 	pm.aurHelper = "paru"
 }
@@ -48,24 +47,24 @@ func (pm *PackageManager) InstallPackages(packageNames []string) error {
 	if len(packageNames) == 0 {
 		return fmt.Errorf("no packages to install")
 	}
-	
+
 	// Separate AUR and official packages
 	aurPackages, officialPackages := pm.categorizePackages(packageNames)
-	
+
 	// Install official packages first
 	if len(officialPackages) > 0 {
 		if err := pm.installOfficialPackages(officialPackages); err != nil {
 			return fmt.Errorf("failed to install official packages: %w", err)
 		}
 	}
-	
+
 	// Install AUR packages
 	if len(aurPackages) > 0 {
 		if err := pm.installAURPackages(aurPackages); err != nil {
 			return fmt.Errorf("failed to install AUR packages: %w", err)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -73,7 +72,7 @@ func (pm *PackageManager) InstallPackages(packageNames []string) error {
 func (pm *PackageManager) categorizePackages(packageNames []string) ([]string, []string) {
 	var aurPackages []string
 	var officialPackages []string
-	
+
 	for _, pkg := range packageNames {
 		// Check if package exists in official repos
 		if pm.isPackageInOfficialRepos(pkg) {
@@ -82,7 +81,7 @@ func (pm *PackageManager) categorizePackages(packageNames []string) ([]string, [
 			aurPackages = append(aurPackages, pkg)
 		}
 	}
-	
+
 	return aurPackages, officialPackages
 }
 
@@ -97,16 +96,13 @@ func (pm *PackageManager) isPackageInOfficialRepos(packageName string) bool {
 func (pm *PackageManager) installOfficialPackages(packageNames []string) error {
 	args := append([]string{"pacman", "-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command("sudo", args...)
-	
-	// Set up real-time output
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	
-	err := cmd.Run()
+
+	// Capture output instead of redirecting to avoid terminal corruption
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("pacman installation failed: %w", err)
+		return fmt.Errorf("pacman installation failed: %s", string(output))
 	}
-	
+
 	return nil
 }
 
@@ -118,20 +114,17 @@ func (pm *PackageManager) installAURPackages(packageNames []string) error {
 			return fmt.Errorf("failed to install paru: %w", err)
 		}
 	}
-	
+
 	// Install AUR packages
 	args := append([]string{"-S", "--noconfirm"}, packageNames...)
 	cmd := exec.Command(pm.aurHelper, args...)
-	
-	// Set up real-time output
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	
-	err := cmd.Run()
+
+	// Capture output instead of redirecting to avoid terminal corruption
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("%s installation failed: %w", pm.aurHelper, err)
+		return fmt.Errorf("%s installation failed: %s", pm.aurHelper, string(output))
 	}
-	
+
 	return nil
 }
 
@@ -142,23 +135,23 @@ func (pm *PackageManager) installParu() error {
 	if err := depsCmd.Run(); err != nil {
 		return fmt.Errorf("failed to install dependencies: %w", err)
 	}
-	
+
 	// Clone and build paru
 	cloneCmd := exec.Command("git", "clone", "https://aur.archlinux.org/paru.git", "/tmp/paru")
 	if err := cloneCmd.Run(); err != nil {
 		return fmt.Errorf("failed to clone paru: %w", err)
 	}
-	
+
 	// Build and install paru
 	buildCmd := exec.Command("bash", "-c", "cd /tmp/paru && makepkg -si --noconfirm")
 	if err := buildCmd.Run(); err != nil {
 		return fmt.Errorf("failed to build paru: %w", err)
 	}
-	
+
 	// Clean up
 	cleanupCmd := exec.Command("rm", "-rf", "/tmp/paru")
 	cleanupCmd.Run()
-	
+
 	return nil
 }
 
@@ -170,7 +163,7 @@ func (pm *PackageManager) GetPackageInfo(packageName string) (string, error) {
 	if err == nil {
 		return string(output), nil
 	}
-	
+
 	// Try AUR if available
 	if pm.isCommandAvailable(pm.aurHelper) {
 		cmd = exec.Command(pm.aurHelper, "-Si", packageName)
@@ -179,7 +172,7 @@ func (pm *PackageManager) GetPackageInfo(packageName string) (string, error) {
 			return string(output), nil
 		}
 	}
-	
+
 	return "", fmt.Errorf("package information not found for %s", packageName)
 }
 
@@ -190,7 +183,7 @@ func (pm *PackageManager) GetInstalledPackages() ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get installed packages: %w", err)
 	}
-	
+
 	packages := strings.Split(strings.TrimSpace(string(output)), "\n")
 	return packages, nil
 }
