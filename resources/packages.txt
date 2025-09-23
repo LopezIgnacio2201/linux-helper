@@ -1,18 +1,18 @@
 # Packages data file - used by the script
 # Format: MODULE_NAME:SUBMODULE_NAME:PACKAGE_NAME
 
-# Browsers (direct packages)
+# =============================================================================
+# 🌐 BROWSERS (DIRECT PACKAGES - NO SUBMODULES)
+# =============================================================================
 Browsers:Packages:firefox
 Browsers:Packages:chromium
 Browsers:Packages:librewolf
 Browsers:Packages:tor-browser
 
-# File Managers (direct packages)
-File Managers:Packages:nautilus
-File Managers:Packages:dolphin
-File Managers:Packages:thunar
-
-# Terminals (submodules)
+# =============================================================================
+# 💻 TERMINALS (HAS SUBMODULES)
+# =============================================================================
+# Terminal Emulators
 Terminals:Terminal Emulators:alacritty
 Terminals:Terminal Emulators:kitty
 Terminals:Terminal Emulators:foot
@@ -23,39 +23,59 @@ Terminals:Terminal Emulators:terminator
 Terminals:Terminal Emulators:xterm
 Terminals:Terminal Emulators:ghostty
 
+# Shells
 Terminals:Shells:bash
 Terminals:Shells:zsh
 Terminals:Shells:fish
 
+# Shell Enhancements
 Terminals:Shell Enhancements:oh-my-zsh
 Terminals:Shell Enhancements:bash-completion
 Terminals:Shell Enhancements:starship
 
+# Terminal Multiplexers
 Terminals:Terminal Multiplexers:tmux
 Terminals:Terminal Multiplexers:zellij
 
-# Media Players (submodules)
+# =============================================================================
+# 📁 FILE MANAGERS (DIRECT PACKAGES - NO SUBMODULES)
+# =============================================================================
+File Managers:Packages:nautilus
+File Managers:Packages:dolphin
+File Managers:Packages:thunar
+
+# =============================================================================
+# 🎵 MEDIA PLAYERS (HAS SUBMODULES)
+# =============================================================================
+# Video Players
 Media Players:Video Players:vlc
 Media Players:Video Players:mpv
 Media Players:Video Players:kodi
 Media Players:Video Players:celluloid
 
+# Audio Players
 Media Players:Audio Players:clementine
 
-# Office and Productivity (submodules)
+# =============================================================================
+# 📄 OFFICE AND PRODUCTIVITY (HAS SUBMODULES)
+# =============================================================================
+# Office Suites
 Office and Productivity:Office Suites:libreoffice-fresh
 Office and Productivity:Office Suites:libreoffice-still
 
+# Document Viewers
 Office and Productivity:Document Viewers:evince
 Office and Productivity:Document Viewers:okular
 Office and Productivity:Document Viewers:xreader
 Office and Productivity:Document Viewers:zathura
 Office and Productivity:Document Viewers:mupdf
 
+# Note Taking
 Office and Productivity:Note Taking:obsidian
 Office and Productivity:Note Taking:marktext
 Office and Productivity:Note Taking:xournalpp
 
+# Text Editors
 Office and Productivity:Text Editors:gedit
 Office and Productivity:Text Editors:kate
 Office and Productivity:Text Editors:leafpad
@@ -63,95 +83,398 @@ Office and Productivity:Text Editors:nano
 Office and Productivity:Text Editors:vim
 Office and Productivity:Text Editors:neovim
 
-# Gaming (submodules)
-Gaming:Steam:steam
-Gaming:Steam:steam-native-runtime
-Gaming:Steam:steam-devices
+# =============================================================================
+# 🎮 GAMING (HAS SUBMODULES)
+# =============================================================================
+# Gaming Platforms
+Gaming:Gaming Platforms:steam
+Gaming:Gaming Platforms:lutris
+Gaming:Gaming Platforms:heroic-games-launcher
 
+# Wine and Compatibility
+Gaming:Wine and Compatibility:wine
+Gaming:Wine and Compatibility:wine-mono
+Gaming:Wine and Compatibility:wine-gecko
+Gaming:Wine and Compatibility:winetricks
+Gaming:Wine and Compatibility:bottles
+
+# Gaming Utilities
+Gaming:Gaming Utilities:mangohud
+Gaming:Gaming Utilities:gamemode
+Gaming:Gaming Utilities:vkbasalt
+Gaming:Gaming Utilities:goverlay
+
+# Emulators
 Gaming:Emulators:retroarch
+Gaming:Emulators:dolphin-emu
 Gaming:Emulators:pcsx2
 Gaming:Emulators:rpcs3
 Gaming:Emulators:yuzu
+Gaming:Emulators:citra
+Gaming:Emulators:mednafen
+Gaming:Emulators:nestopia
+Gaming:Emulators:snes9x
+Gaming:Emulators:mame
 
-Gaming:Game Launchers:lutris
-Gaming:Game Launchers:heroic-games-launcher
-Gaming:Game Launchers:minigalaxy
+# =============================================================================
+# 💬 COMMUNICATION (HAS SUBMODULES)
+# =============================================================================
+# Messaging Apps
+Communication:Messaging Apps:discord
+Communication:Messaging Apps:telegram-desktop
+Communication:Messaging Apps:signal-desktop
+Communication:Messaging Apps:whatsapp-for-linux
+Communication:Messaging Apps:skype
 
-# Communication (submodules)
-Communication:Instant Messaging:discord
-Communication:Instant Messaging:telegram-desktop
-Communication:Instant Messaging:signal-desktop
-Communication:Instant Messaging:whatsapp-for-linux
+# Email Clients
+Communication:Email Clients:thunderbird
+Communication:Email Clients:geary
+Communication:Email Clients:alpine
+Communication:Email Clients:mutt
+Communication:Email Clients:neomutt
 
-Communication:Email:thunderbird
-Communication:Email:geary
-Communication:Email:mutt
+# Video Conferencing
+Communication:Video Conferencing:zoom
+Communication:Video Conferencing:teams
+Communication:Video Conferencing:meet
 
-Communication:Video Calling:zoom
-Communication:Video Calling:teams
-Communication:Video Calling:skype
+# IRC and Chat
+Communication:IRC and Chat:hexchat
+Communication:IRC and Chat:weechat
+Communication:IRC and Chat:irssi
+Communication:IRC and Chat:pidgin
+Communication:IRC and Chat:gajim
 
-# Graphics and Design (submodules)
-Graphics and Design:Image Editing:gimp
-Graphics and Design:Image Editing:krita
-Graphics and Design:Image Editing:inkscape
+# =============================================================================
+# 🎨 GRAPHICS AND DESIGN (HAS SUBMODULES)
+# =============================================================================
+# Image Editors
+Graphics and Design:Image Editors:gimp
+Graphics and Design:Image Editors:krita
+Graphics and Design:Image Editors:inkscape
+Graphics and Design:Image Editors:darktable
+Graphics and Design:Image Editors:rawtherapee
+Graphics and Design:Image Editors:digikam
+Graphics and Design:Image Editors:shotwell
+Graphics and Design:Image Editors:feh
 
-Graphics and Design:3D Modeling:blender
-Graphics and Design:3D Modeling:freecad
-
-Graphics and Design:Vector Graphics:inkscape
+# Vector Graphics
+Graphics and Design:Vector Graphics:libreoffice-draw
 Graphics and Design:Vector Graphics:scribus
 
-# Development Tools (submodules)
-Development Tools:IDEs:code
-Development Tools:IDEs:vscodium
-Development Tools:IDEs:android-studio
-Development Tools:IDEs:netbeans
+# 3D Modeling
+Graphics and Design:3D Modeling:blender
+Graphics and Design:3D Modeling:freecad
+Graphics and Design:3D Modeling:openscad
+Graphics and Design:3D Modeling:meshlab
 
+# Design Tools
+Graphics and Design:Design Tools:figma-linux
+Graphics and Design:Design Tools:canva
+Graphics and Design:Design Tools:adobe-creative-cloud
+
+# Image Viewers
+Graphics and Design:Image Viewers:gwenview
+Graphics and Design:Image Viewers:ristretto
+Graphics and Design:Image Viewers:eog
+
+# =============================================================================
+# ⚙️ DEVELOPMENT TOOLS (HAS SUBMODULES)
+# =============================================================================
+# IDEs and Editors
+Development Tools:IDEs and Editors:code
+Development Tools:IDEs and Editors:vscodium
+Development Tools:IDEs and Editors:netbeans
+Development Tools:IDEs and Editors:android-studio
+
+# Programming Languages
+Development Tools:Programming Languages:python
+Development Tools:Programming Languages:nodejs
+Development Tools:Programming Languages:jdk-openjdk
+Development Tools:Programming Languages:go
+Development Tools:Programming Languages:rust
+Development Tools:Programming Languages:php
+Development Tools:Programming Languages:ruby
+
+# Build Tools and Compilers
+Development Tools:Build Tools and Compilers:gcc
+Development Tools:Build Tools and Compilers:clang
+Development Tools:Build Tools and Compilers:make
+Development Tools:Build Tools and Compilers:cmake
+Development Tools:Build Tools and Compilers:ninja
+Development Tools:Build Tools and Compilers:meson
+Development Tools:Build Tools and Compilers:maven
+Development Tools:Build Tools and Compilers:gradle
+Development Tools:Build Tools and Compilers:cargo
+Development Tools:Build Tools and Compilers:npm
+Development Tools:Build Tools and Compilers:yarn
+Development Tools:Build Tools and Compilers:pip
+
+# Version Control
 Development Tools:Version Control:git
 Development Tools:Version Control:github-cli
 
-Development Tools:Languages:python
-Development Tools:Languages:nodejs
-Development Tools:Languages:go
-Development Tools:Languages:rust
-Development Tools:Languages:java-openjdk
+# Databases
+Development Tools:Databases:mysql
+Development Tools:Databases:postgresql
+Development Tools:Databases:sqlite
+Development Tools:Databases:mongodb
+Development Tools:Databases:redis
+Development Tools:Databases:dbeaver
 
-Development Tools:Build Tools:make
-Development Tools:Build Tools:cmake
-Development Tools:Build Tools:meson
-Development Tools:Build Tools:ninja
+# Container and DevOps
+Development Tools:Container and DevOps:docker
+Development Tools:Container and DevOps:docker-compose
+Development Tools:Container and DevOps:kubernetes
+Development Tools:Container and DevOps:terraform
+Development Tools:Container and DevOps:ansible
 
-# Utilities (submodules)
-Utilities:System Monitoring:htop
-Utilities:System Monitoring:btop
-Utilities:System Monitoring:neofetch
+# =============================================================================
+# 🔧 UTILITIES (HAS SUBMODULES)
+# =============================================================================
+# Command Replacements
+Utilities:Command Replacements:lsd
+Utilities:Command Replacements:exa
+Utilities:Command Replacements:bat
+Utilities:Command Replacements:fd
+Utilities:Command Replacements:ripgrep
+Utilities:Command Replacements:htop
+Utilities:Command Replacements:btop
+Utilities:Command Replacements:gdu
+Utilities:Command Replacements:duf
+Utilities:Command Replacements:procs
+Utilities:Command Replacements:tree
+Utilities:Command Replacements:fzf
 
-Utilities:File Management:ranger
-Utilities:File Management:mc
-Utilities:File Management:tree
+# System Utilities
+Utilities:System Utilities:fastfetch
+Utilities:System Utilities:nethogs
+Utilities:System Utilities:rsync
+Utilities:System Utilities:timeshift
 
-Utilities:Network:curl
-Utilities:Network:wget
-Utilities:Network:openssh
+# Archive and Compression
+Utilities:Archive and Compression:unzip
+Utilities:Archive and Compression:p7zip
+Utilities:Archive and Compression:tar
+Utilities:Archive and Compression:gzip
+Utilities:Archive and Compression:bzip2
+Utilities:Archive and Compression:xz
+Utilities:Archive and Compression:zstd
 
-# Cybersecurity (submodules)
-Cybersecurity:Network Security:nmap
-Cybersecurity:Network Security:wireshark
-Cybersecurity:Network Security:burpsuite
+# =============================================================================
+# 🔒 CYBERSECURITY (HAS SUBMODULES)
+# =============================================================================
+# Network Security and Reconnaissance
+Cybersecurity:Network Security and Reconnaissance:nmap
+Cybersecurity:Network Security and Reconnaissance:masscan
+Cybersecurity:Network Security and Reconnaissance:zmap
+Cybersecurity:Network Security and Reconnaissance:recon-ng
+Cybersecurity:Network Security and Reconnaissance:theharvester
+Cybersecurity:Network Security and Reconnaissance:sublist3r
+Cybersecurity:Network Security and Reconnaissance:amass
+Cybersecurity:Network Security and Reconnaissance:assetfinder
+Cybersecurity:Network Security and Reconnaissance:subfinder
+Cybersecurity:Network Security and Reconnaissance:httpx
+Cybersecurity:Network Security and Reconnaissance:gobuster
+Cybersecurity:Network Security and Reconnaissance:dirb
+Cybersecurity:Network Security and Reconnaissance:dirbuster
+Cybersecurity:Network Security and Reconnaissance:wfuzz
+Cybersecurity:Network Security and Reconnaissance:ffuf
 
+# Vulnerability Assessment
+Cybersecurity:Vulnerability Assessment:nessus
+Cybersecurity:Vulnerability Assessment:openvas
+Cybersecurity:Vulnerability Assessment:nikto
+Cybersecurity:Vulnerability Assessment:sqlmap
+Cybersecurity:Vulnerability Assessment:wpscan
+Cybersecurity:Vulnerability Assessment:joomscan
+Cybersecurity:Vulnerability Assessment:droopescan
+Cybersecurity:Vulnerability Assessment:w3af
+Cybersecurity:Vulnerability Assessment:skipfish
+Cybersecurity:Vulnerability Assessment:wapiti
+Cybersecurity:Vulnerability Assessment:whatweb
+Cybersecurity:Vulnerability Assessment:wafw00f
+
+# Web Application Security
+Cybersecurity:Web Application Security:burpsuite
+Cybersecurity:Web Application Security:owasp-zap
+Cybersecurity:Web Application Security:commix
+Cybersecurity:Web Application Security:xsser
+Cybersecurity:Web Application Security:xsstrike
+Cybersecurity:Web Application Security:dalfox
+Cybersecurity:Web Application Security:param-miner
+
+# Password Attacks
+Cybersecurity:Password Attacks:john
+Cybersecurity:Password Attacks:hashcat
+Cybersecurity:Password Attacks:hydra
+Cybersecurity:Password Attacks:medusa
+Cybersecurity:Password Attacks:patator
+Cybersecurity:Password Attacks:crunch
+Cybersecurity:Password Attacks:cewl
+Cybersecurity:Password Attacks:cupp
+Cybersecurity:Password Attacks:rsmangler
+Cybersecurity:Password Attacks:hash-identifier
+Cybersecurity:Password Attacks:hashid
+
+# Wireless Security
+Cybersecurity:Wireless Security:aircrack-ng
+Cybersecurity:Wireless Security:reaver
+Cybersecurity:Wireless Security:bully
+Cybersecurity:Wireless Security:wifite
+Cybersecurity:Wireless Security:kismet
+Cybersecurity:Wireless Security:wireshark
+Cybersecurity:Wireless Security:tshark
+Cybersecurity:Wireless Security:tcpdump
+Cybersecurity:Wireless Security:bettercap
+Cybersecurity:Wireless Security:fluxion
+
+# Social Engineering
+Cybersecurity:Social Engineering:setoolkit
+Cybersecurity:Social Engineering:phishery
+Cybersecurity:Social Engineering:gophish
+Cybersecurity:Social Engineering:king-phisher
+Cybersecurity:Social Engineering:beef-xss
+Cybersecurity:Social Engineering:social-engineer-toolkit
+
+# Malware Analysis
+Cybersecurity:Malware Analysis:yara
+Cybersecurity:Malware Analysis:clamav
+Cybersecurity:Malware Analysis:cuckoo
+Cybersecurity:Malware Analysis:volatility
+Cybersecurity:Malware Analysis:radare2
+Cybersecurity:Malware Analysis:ghidra
+Cybersecurity:Malware Analysis:ida-free
+Cybersecurity:Malware Analysis:x64dbg
+Cybersecurity:Malware Analysis:ollydbg
+Cybersecurity:Malware Analysis:pe-bear
+Cybersecurity:Malware Analysis:peview
+Cybersecurity:Malware Analysis:strings
+Cybersecurity:Malware Analysis:file
+Cybersecurity:Malware Analysis:binwalk
+Cybersecurity:Malware Analysis:upx
+
+# Forensics
 Cybersecurity:Forensics:autopsy
-Cybersecurity:Forensics:volatility
+Cybersecurity:Forensics:sleuthkit
+Cybersecurity:Forensics:bulk-extractor
+Cybersecurity:Forensics:foremost
+Cybersecurity:Forensics:scalpel
+Cybersecurity:Forensics:photorec
+Cybersecurity:Forensics:testdisk
+Cybersecurity:Forensics:ddrescue
+Cybersecurity:Forensics:dc3dd
+Cybersecurity:Forensics:guymager
+Cybersecurity:Forensics:rekall
+Cybersecurity:Forensics:plaso
+Cybersecurity:Forensics:log2timeline
 
-Cybersecurity:Password Security:hashcat
-Cybersecurity:Password Security:john
+# Exploitation Frameworks
+Cybersecurity:Exploitation Frameworks:metasploit
+Cybersecurity:Exploitation Frameworks:armitage
+Cybersecurity:Exploitation Frameworks:cobalt-strike
+Cybersecurity:Exploitation Frameworks:empire
+Cybersecurity:Exploitation Frameworks:powershell-empire
+Cybersecurity:Exploitation Frameworks:unicorn
+Cybersecurity:Exploitation Frameworks:veil
+Cybersecurity:Exploitation Frameworks:thefatrat
+Cybersecurity:Exploitation Frameworks:msfvenom
+Cybersecurity:Exploitation Frameworks:payloadsallthethings
 
-# Privacy (submodules)
-Privacy:VPNs:openvpn
-Privacy:VPNs:wireguard-tools
+# Network Monitoring and Analysis
+Cybersecurity:Network Monitoring and Analysis:netstat
+Cybersecurity:Network Monitoring and Analysis:ss
+Cybersecurity:Network Monitoring and Analysis:iftop
+Cybersecurity:Network Monitoring and Analysis:tcpflow
+Cybersecurity:Network Monitoring and Analysis:ngrep
+Cybersecurity:Network Monitoring and Analysis:dnsrecon
+Cybersecurity:Network Monitoring and Analysis:dnsenum
+Cybersecurity:Network Monitoring and Analysis:fierce
+Cybersecurity:Network Monitoring and Analysis:dnsmap
+Cybersecurity:Network Monitoring and Analysis:dnswalk
 
-Privacy:Encryption:gnupg
-Privacy:Encryption:veracrypt
+# Cryptography and Steganography
+Cybersecurity:Cryptography and Steganography:steghide
+Cybersecurity:Cryptography and Steganography:outguess
+Cybersecurity:Cryptography and Steganography:stegsolve
+Cybersecurity:Cryptography and Steganography:stegcracker
+Cybersecurity:Cryptography and Steganography:gpg
+Cybersecurity:Cryptography and Steganography:openssl
+Cybersecurity:Cryptography and Steganography:cryptcat
+Cybersecurity:Cryptography and Steganography:ncat
+Cybersecurity:Cryptography and Steganography:socat
+Cybersecurity:Cryptography and Steganography:netcat
+Cybersecurity:Cryptography and Steganography:nc
 
-Privacy:Browsers:tor-browser
-Privacy:Browsers:librewolf
+# OSINT and Information Gathering
+Cybersecurity:OSINT and Information Gathering:maltego
+Cybersecurity:OSINT and Information Gathering:spiderfoot
+Cybersecurity:OSINT and Information Gathering:shodan
+Cybersecurity:OSINT and Information Gathering:censys
+Cybersecurity:OSINT and Information Gathering:zoomeye
+Cybersecurity:OSINT and Information Gathering:binaryedge
+Cybersecurity:OSINT and Information Gathering:passivetotal
+Cybersecurity:OSINT and Information Gathering:threatcrowd
+Cybersecurity:OSINT and Information Gathering:virustotal
+Cybersecurity:OSINT and Information Gathering:urlvoid
+Cybersecurity:OSINT and Information Gathering:ipvoid
+
+# =============================================================================
+# 🛡️ PRIVACY (HAS SUBMODULES)
+# =============================================================================
+# VPN and Proxy Tools
+Privacy:VPN and Proxy Tools:mullvad-vpn
+Privacy:VPN and Proxy Tools:protonvpn
+Privacy:VPN and Proxy Tools:ivpn
+Privacy:VPN and Proxy Tools:tor
+Privacy:VPN and Proxy Tools:proxychains
+
+# DNS and Network Privacy
+Privacy:DNS and Network Privacy:nextdns
+Privacy:DNS and Network Privacy:adguard-dns
+Privacy:DNS and Network Privacy:cloudflare-dns
+Privacy:DNS and Network Privacy:dnscrypt-proxy
+Privacy:DNS and Network Privacy:unbound
+
+# Email Privacy
+Privacy:Email Privacy:protonmail
+Privacy:Email Privacy:tutanota
+Privacy:Email Privacy:enigmail
+Privacy:Email Privacy:mailvelope
+
+# Messaging Privacy
+Privacy:Messaging Privacy:session
+Privacy:Messaging Privacy:threema
+Privacy:Messaging Privacy:element-desktop
+Privacy:Messaging Privacy:jitsi-meet
+
+# File Encryption and Storage
+Privacy:File Encryption and Storage:veracrypt
+Privacy:File Encryption and Storage:cryptomator
+Privacy:File Encryption and Storage:age
+
+# Password Management
+Privacy:Password Management:bitwarden
+Privacy:Password Management:keepassxc
+Privacy:Password Management:pass
+Privacy:Password Management:1password
+Privacy:Password Management:lastpass
+
+# Metadata Protection
+Privacy:Metadata Protection:mat2
+Privacy:Metadata Protection:exiftool
+Privacy:Metadata Protection:pdf-redact-tools
+Privacy:Metadata Protection:metadata-cleaner
+
+# Privacy Utilities
+Privacy:Privacy Utilities:ublock-origin
+Privacy:Privacy Utilities:privacy-badger
+Privacy:Privacy Utilities:https-everywhere
+Privacy:Privacy Utilities:decentraleyes
+Privacy:Privacy Utilities:clearurls
+
+# System Privacy
+Privacy:System Privacy:firejail
+Privacy:System Privacy:bubblewrap
+Privacy:System Privacy:apparmor
+Privacy:System Privacy:selinux

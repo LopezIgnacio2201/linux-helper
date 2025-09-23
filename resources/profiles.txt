@@ -20,7 +20,7 @@ common:Graphics and Design
 common:Development Tools
 common:Utilities
 
-# Power user profile (all modules)
+# Power user profile (all modules - same as --poweruser parameter)
 poweruser:Browsers
 poweruser:Terminals
 poweruser:File Managers

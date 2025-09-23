@@ -122,6 +122,14 @@ func (m model) Init() tea.Cmd {
 	return tea.ClearScreen
 }
 
+// cleanupTerminal resets terminal state when exiting TUI
+func cleanupTerminal() {
+	fmt.Print("\033[0m")       // Reset all text attributes
+	fmt.Print("\033[?25h")     // Show cursor
+	fmt.Print("\033[?7h")      // Enable line wrapping
+	fmt.Print("\033[2J\033[H") // Clear screen and move cursor to top
+}
+
 // installAllSelectedPackages starts the installation process for all selected packages across all modules
 func (m model) installAllSelectedPackages() (tea.Model, tea.Cmd) {
 	// Get all selected packages from all modules and submodules
@@ -698,6 +706,9 @@ func main() {
 
 	// Check if we need to run installation after TUI exits
 	if m, ok := finalModel.(model); ok {
+		// Clean up terminal state before installation
+		cleanupTerminal()
+
 		// Get selected packages
 		var packagesToInstall []string
 		for packageName, isSelected := range m.selectedPackages {
@@ -725,6 +736,12 @@ func runInstallationMode() {
 
 // runInstallation runs the actual package installation
 func runInstallation(packagesToInstall []string) {
+	// Clear screen and reset terminal state completely
+	fmt.Print("\033[2J\033[H") // Clear screen and move cursor to top
+	fmt.Print("\033[0m")       // Reset all text attributes
+	fmt.Print("\033[?25h")     // Show cursor
+	fmt.Print("\033[?7h")      // Enable line wrapping
+
 	fmt.Println("🚀 Linux Package Manager - Installation Mode")
 	fmt.Println("=============================================")
 	fmt.Printf("Packages to install: %v\n", packagesToInstall)
@@ -747,6 +764,7 @@ func runInstallation(packagesToInstall []string) {
 		fmt.Println("- Check if you have sufficient disk space")
 		fmt.Println("- Verify your internet connection")
 		fmt.Println("- Try running the installation manually to see detailed errors")
+		fmt.Println("- Make sure you have sudo privileges")
 		os.Exit(1)
 	} else {
 		fmt.Println("✅ Installation completed successfully!")

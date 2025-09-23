@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Linux Package Manager Tool - Entry Point
-# Usage: ./install.sh [--poweruser]
+# Usage: ./install.sh
 
 set -e
 
@@ -42,10 +42,25 @@ check_arch() {
     print_status "Arch-based system detected ✓"
 }
 
+# Check sudo access
+check_sudo() {
+    print_status "Checking sudo access..."
+    if ! sudo -n true 2>/dev/null; then
+        print_warning "Sudo authentication required..."
+        print_status "Please enter your password when prompted:"
+        if ! sudo true; then
+            print_error "Sudo authentication failed. Please check your password and try again."
+            exit 1
+        fi
+    fi
+    print_status "Sudo access confirmed ✓"
+}
+
 # Check if Go is installed
 check_go() {
     if ! command -v go &> /dev/null; then
         print_warning "Go is not installed. Installing Go..."
+        print_status "Requesting sudo privileges for Go installation..."
         sudo pacman -S go --noconfirm
         print_status "Go installed ✓"
     else
@@ -66,19 +81,15 @@ main() {
     
     # Check system requirements
     check_arch
+    check_sudo
     check_go
     
     # Build the application
     build_app
     
-    # Check for poweruser flag
-    if [[ "$1" == "--poweruser" ]]; then
-        print_status "Starting with Power User profile..."
-        ./linux-package-manager --poweruser
-    else
-        print_status "Starting with standard profiles..."
-        ./linux-package-manager
-    fi
+    # Start the application
+    print_status "Starting Linux Package Manager..."
+    ./linux-package-manager
 }
 
 # Run main function with all arguments

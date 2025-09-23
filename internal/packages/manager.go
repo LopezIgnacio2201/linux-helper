@@ -1,7 +1,6 @@
 package packages
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,40 +14,17 @@ type PackageManager struct {
 
 // streamCommandOutput runs a command and streams its output in real-time
 func streamCommandOutput(cmd *exec.Cmd) error {
-	// Create pipes for stdout and stderr
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return fmt.Errorf("failed to create stdout pipe: %w", err)
-	}
+	// Reset terminal state before running command
+	fmt.Print("\033[0m")   // Reset all attributes
+	fmt.Print("\033[?25h") // Show cursor
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return fmt.Errorf("failed to create stderr pipe: %w", err)
-	}
+	// Ensure proper terminal context
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	// Start the command
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start command: %w", err)
-	}
-
-	// Stream stdout
-	go func() {
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			fmt.Println(scanner.Text())
-		}
-	}()
-
-	// Stream stderr
-	go func() {
-		scanner := bufio.NewScanner(stderr)
-		for scanner.Scan() {
-			fmt.Fprintln(os.Stderr, scanner.Text())
-		}
-	}()
-
-	// Wait for command to complete
-	if err := cmd.Wait(); err != nil {
+	// Run the command directly (no pipes to avoid conflicts)
+	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("command failed: %w", err)
 	}
 
@@ -60,6 +36,25 @@ func NewPackageManager() *PackageManager {
 	pm := &PackageManager{}
 	pm.detectAURHelper()
 	return pm
+}
+
+// checkSudoAccess verifies that sudo access is available
+func (pm *PackageManager) checkSudoAccess() error {
+	cmd := exec.Command("sudo", "-n", "true")
+	err := cmd.Run()
+	if err != nil {
+		// Try to authenticate with sudo
+		fmt.Println("🔐 Sudo authentication required...")
+		authCmd := exec.Command("sudo", "true")
+		authCmd.Stdin = os.Stdin
+		authCmd.Stdout = os.Stdout
+		authCmd.Stderr = os.Stderr
+		if err := authCmd.Run(); err != nil {
+			return fmt.Errorf("sudo authentication failed: %w", err)
+		}
+		fmt.Println("✅ Sudo authentication successful!")
+	}
+	return nil
 }
 
 // detectAURHelper detects available AUR helper (paru > yay > install paru)
@@ -90,6 +85,11 @@ func (pm *PackageManager) isCommandAvailable(command string) bool {
 func (pm *PackageManager) InstallPackages(packageNames []string) error {
 	if len(packageNames) == 0 {
 		return fmt.Errorf("no packages to install")
+	}
+
+	// Check sudo access first
+	if err := pm.checkSudoAccess(); err != nil {
+		return fmt.Errorf("sudo access check failed: %w", err)
 	}
 
 	// Separate AUR and official packages
@@ -188,19 +188,19 @@ func (pm *PackageManager) installAURPackages(packageNames []string) error {
 func (pm *PackageManager) installParu() error {
 	// Install dependencies
 	depsCmd := exec.Command("sudo", "pacman", "-S", "--noconfirm", "base-devel", "git")
-	if err := depsCmd.Run(); err != nil {
+	if err := streamCommandOutput(depsCmd); err != nil {
 		return fmt.Errorf("failed to install dependencies: %w", err)
 	}
 
 	// Clone and build paru
 	cloneCmd := exec.Command("git", "clone", "https://aur.archlinux.org/paru.git", "/tmp/paru")
-	if err := cloneCmd.Run(); err != nil {
+	if err := streamCommandOutput(cloneCmd); err != nil {
 		return fmt.Errorf("failed to clone paru: %w", err)
 	}
 
 	// Build and install paru
 	buildCmd := exec.Command("bash", "-c", "cd /tmp/paru && makepkg -si --noconfirm")
-	if err := buildCmd.Run(); err != nil {
+	if err := streamCommandOutput(buildCmd); err != nil {
 		return fmt.Errorf("failed to build paru: %w", err)
 	}
 
